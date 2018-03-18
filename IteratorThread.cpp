@@ -4,7 +4,9 @@
 #pragma hdrstop
 
 #include "IteratorThread.h"
+#include "FileSystem.h"
 #pragma package(smart_init)
+
 //---------------------------------------------------------------------------
 
 //   Important: Methods and properties of objects in VCL can only be
@@ -18,6 +20,9 @@
 //      {
 //        Form1->Caption = "Updated in a thread";
 //      }
+
+// this file contains searching iterator class
+
 //---------------------------------------------------------------------------
 
 __fastcall IteratorThread::IteratorThread(WCHAR *filePath, bool CreateSuspended)
@@ -25,18 +30,30 @@ __fastcall IteratorThread::IteratorThread(WCHAR *filePath, bool CreateSuspended)
 {
 	FreeOnTerminate = true;
 
+	NTFS_FS NTFS = new NTFS_FS(); // create instance
+	NTFS.GetClusterSize();
+	NTFS.GetFileSystemSize();
+
+
 	// Открыть файловую систему
 }
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
 	// Определить размер кластера
-	int clusterSize = 4096;
+
+	clusterSize = NTFS.GetClusterSize();
+
+
 	BYTE *dataBuffer = new BYTE[clusterSize];
-	MySearchThread = new SearchThread(dataBuffer,clusterSize,false);
+
+
+	MySearchThread = new SearchThread(dataBuffer,clusterSize,false);  //new thread
+
+
 
 	// Перебор кластеров диска
-	for(int i = 0; i<10000; i++)
+	for(int i = 0; i<100; i++)
 	{
 		// Заблокировать доступ к буферу
 		//BufferAccessCS->Enter();

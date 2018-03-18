@@ -19,6 +19,9 @@
 //      {
 //        Form1->Caption = "Updated in a thread";
 //      }
+
+// this file contains reading thread
+
 //---------------------------------------------------------------------------
 
 __fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended)
@@ -26,8 +29,10 @@ __fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool
 {
 	FreeOnTerminate = true;
 
+	// multithread events
 	BufferReadyEvent  = new TEvent(NULL, true, false,"",false);
 	BufferCopiedEvent = new TEvent(NULL, true, false,"",false);
+
 	//BufferAccessCS = new TCriticalSection;
 
 	ClusterSize = clusterSize;
@@ -63,6 +68,7 @@ void __fastcall SearchThread::Execute()
 	delete BufferReadyEvent;
 	delete BufferCopiedEvent;
 	//delete BufferAccessCS;
+
   // Удалить буфер
 	delete[] DataBuffer;
 	Synchronize(&CompleteSearch);

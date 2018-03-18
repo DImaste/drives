@@ -2,9 +2,9 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = 'MyThread'
-  ClientHeight = 345
-  ClientWidth = 530
+  Caption = 'NTFS Shark'
+  ClientHeight = 423
+  ClientWidth = 818
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,17 +19,17 @@ object MainForm: TMainForm
     Top = 24
     Width = 513
     Height = 21
-    EditLabel.Width = 79
+    EditLabel.Width = 155
     EditLabel.Height = 13
-    EditLabel.Caption = #1055#1091#1090#1100' '#1082' '#1088#1072#1079#1076#1077#1083#1091
+    EditLabel.Caption = #1055#1091#1090#1100' '#1082' '#1080#1084#1077#1085#1080' '#1092#1072#1081#1083#1072' ('#1088#1072#1079#1076#1077#1083#1072')'
     TabOrder = 0
     Text = '\\.\C:'
   end
   object ResultTree: TVirtualStringTree
     Left = 8
-    Top = 96
+    Top = 110
     Width = 513
-    Height = 241
+    Height = 296
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText
@@ -41,12 +41,48 @@ object MainForm: TMainForm
     Columns = <>
   end
   object SearchButton: TButton
-    Left = 232
-    Top = 51
+    Left = 352
+    Top = 62
     Width = 75
     Height = 25
-    Caption = #1055#1086#1080#1089#1082'!'
+    Caption = #1055#1086#1080#1089#1082
     TabOrder = 2
     OnClick = SearchButtonClick
+  end
+  object Television: TListBox
+    Left = 576
+    Top = 110
+    Width = 234
+    Height = 296
+    ItemHeight = 13
+    TabOrder = 3
+  end
+  object ReadBuffer: TButton
+    Left = 440
+    Top = 62
+    Width = 81
+    Height = 25
+    Caption = #1063#1090#1077#1085#1080#1077
+    TabOrder = 4
+    OnClick = ReadBufferClick
+  end
+  object ByteEdit: TLabeledEdit
+    Left = 8
+    Top = 64
+    Width = 193
+    Height = 21
+    EditLabel.Width = 173
+    EditLabel.Height = 13
+    EditLabel.Caption = #1050#1086#1083#1080#1095#1082#1089#1090#1074#1086' '#1073#1072#1081#1090' '#1076#1083#1103' '#1089#1095#1080#1090#1099#1074#1072#1085#1080#1103
+    TabOrder = 5
+    Text = '2'
+  end
+  object LogBox: TListBox
+    Left = 576
+    Top = 8
+    Width = 234
+    Height = 91
+    ItemHeight = 13
+    TabOrder = 6
   end
 end
