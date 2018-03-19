@@ -2,7 +2,7 @@
 
 #include <vcl.h>
 #pragma hdrstop
-
+#include "FileSystem.h"
 #include "SearchThread.h"
 #include "Main.h"
 #pragma package(smart_init)
@@ -99,5 +99,11 @@ void __fastcall SearchThread::AddMatch()
 //---------------------------------------------------------------------------
 void __fastcall SearchThread::CompleteSearch()
 {
+	PDISKHANDLE mydisk;
+
+    mydis
+
+	MainForm->Television->Items->Add("Cluster Size = ");
+
 	Application->MessageBoxW(L"Поиск завершен!", L"", MB_OK);
 }

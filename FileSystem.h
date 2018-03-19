@@ -2,6 +2,15 @@
 
 #ifndef FileSystemH
 #define FileSystemH
+#include <windows.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+//#include "FileSystem.cpp"
+
+
+#pragma pack(push,1)
 
 typedef struct {
 	UCHAR Jump[3];
@@ -29,6 +38,35 @@ typedef struct {
 }BOOT_BLOCK, *PBOOT_BLOCK;
 
 
+typedef struct {
+	HANDLE fileHandle;
+	DWORD type;
+	DWORD IsLong;
+	DWORD filesSize;
+	DWORD realFiles;
+	WCHAR DosDevice;
+	union
+	{
+		struct
+		{
+			BOOT_BLOCK bootSector;
+			DWORD BytesPerFileRecord;
+			DWORD BytesPerCluster;
+			BOOL complete;
+			DWORD sizeMFT;
+			DWORD entryCount;
+			ULARGE_INTEGER MFTLocation;
+			UCHAR *MFT;
+			UCHAR *Bitmap;
+		} NTFS;
+	};
+}DISKHANDLE, *PDISKHANDLE;
+
+//PDISKHANDLE OpenDisk(LPCTSTR disk);
+
+
+
+ /*
  class NTFS_FS
 {
 private:
@@ -44,11 +82,14 @@ public:
 	int GetClusterSize();		// набор внешних данных - интерфейс класса
 	__int64 GetFileSystemSize();
 	intReadCluster(BYTE *outData);
+	DISKHANDLE *mydisk = new DISKHANDLE;
+
+
 
 
 
 };
 
-
+ */
 //---------------------------------------------------------------------------
 #endif

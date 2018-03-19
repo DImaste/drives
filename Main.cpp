@@ -25,13 +25,15 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 {
 	IteratorThread *myIteratorThread = new IteratorThread(PathEdit->Text.c_str(), false);
+
 }
 
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::ReadBufferClick(TObject *Sender)
 {
-	SearchThread *mySearchThread = new SearchThread(/*something*/);
+  //	SearchThread *mySearchThread = new SearchThread(/*something*/);
+
 }
 
 //---------------------------------------------------------------------------

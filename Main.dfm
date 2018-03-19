@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object PathEdit: TLabeledEdit
     Left = 8
     Top = 24
-    Width = 513
+    Width = 449
     Height = 21
     EditLabel.Width = 155
     EditLabel.Height = 13
@@ -26,9 +26,9 @@ object MainForm: TMainForm
     Text = '\\.\C:'
   end
   object ResultTree: TVirtualStringTree
-    Left = 8
-    Top = 110
-    Width = 513
+    Left = 488
+    Top = 105
+    Width = 321
     Height = 296
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
@@ -41,7 +41,7 @@ object MainForm: TMainForm
     Columns = <>
   end
   object SearchButton: TButton
-    Left = 352
+    Left = 288
     Top = 62
     Width = 75
     Height = 25
@@ -50,15 +50,15 @@ object MainForm: TMainForm
     OnClick = SearchButtonClick
   end
   object Television: TListBox
-    Left = 576
-    Top = 110
-    Width = 234
+    Left = 8
+    Top = 105
+    Width = 449
     Height = 296
     ItemHeight = 13
     TabOrder = 3
   end
   object ReadBuffer: TButton
-    Left = 440
+    Left = 376
     Top = 62
     Width = 81
     Height = 25
@@ -78,9 +78,9 @@ object MainForm: TMainForm
     Text = '2'
   end
   object LogBox: TListBox
-    Left = 576
+    Left = 488
     Top = 8
-    Width = 234
+    Width = 322
     Height = 91
     ItemHeight = 13
     TabOrder = 6

@@ -5,7 +5,7 @@
 
 #include "IteratorThread.h"
 #include "FileSystem.h"
-#pragma package(smart_init)
+//#pragma package(smart_init)
 
 //---------------------------------------------------------------------------
 
@@ -29,11 +29,11 @@ __fastcall IteratorThread::IteratorThread(WCHAR *filePath, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
-
+	 /*
 	NTFS_FS NTFS = new NTFS_FS(); // create instance
 	NTFS.GetClusterSize();
 	NTFS.GetFileSystemSize();
-
+	  */
 
 	// Открыть файловую систему
 }
@@ -42,9 +42,9 @@ void __fastcall IteratorThread::Execute()
 {
 	// Определить размер кластера
 
-	clusterSize = NTFS.GetClusterSize();
+   /*	clusterSize = NTFS.GetClusterSize();   */
 
-
+	int clusterSize = 4096;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 

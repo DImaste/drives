@@ -3,10 +3,20 @@
 #pragma hdrstop
 
 #include "FileSystem.h"
+#include "Main.h"
 #include <windows.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
+
+
+using namespace std;
+
+/*
 NTFS_FS::NTFS_FS()
 {
 
@@ -70,11 +80,13 @@ NTFS_FS::ReadFile()
 	// Закрыть файл
 	CloseHandle(fileHandle);
 
+}
+
+ int NTFS_FS::GetDiskInfo()
+{
 
 
-
-
-
+	return ClusterSize;
 }
 
 
@@ -91,6 +103,52 @@ __int64 NTFS_FS::GetFileSystemSize()
 
 	return FileSystemSize;
 }
+
+
+*/
+
+
+
+	PDISKHANDLE OpenDisk(LPCTSTR disk)
+{
+	PDISKHANDLE tmpDisk;
+	DWORD read;
+	tmpDisk = new DISKHANDLE;
+	memset(tmpDisk, 0, sizeof(DISKHANDLE));
+	tmpDisk->fileHandle = CreateFile(disk, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+
+	if (tmpDisk->fileHandle != INVALID_HANDLE_VALUE)
+	{
+		ReadFile(tmpDisk->fileHandle, &tmpDisk->NTFS.bootSector, sizeof(BOOT_BLOCK), &read, NULL);
+		if (read==sizeof(BOOT_BLOCK))
+		{
+			if (strncmp("NTFS",(const char*) &tmpDisk->NTFS.bootSector.Format, 4)==0)
+			{
+				//tmpDisk->type = NTFSDISK;
+				tmpDisk->NTFS.BytesPerCluster = tmpDisk->NTFS.bootSector.BytesPerSector * tmpDisk->NTFS.bootSector.SectorsPerCluster;
+				tmpDisk->NTFS.BytesPerFileRecord = tmpDisk->NTFS.bootSector.ClustersPerFileRecord < 0x80 ? tmpDisk->NTFS.bootSector.ClustersPerFileRecord * tmpDisk->NTFS.BytesPerCluster: 1 <<(0x100 - tmpDisk->NTFS.bootSector.ClustersPerFileRecord);
+
+				tmpDisk->NTFS.complete = FALSE;
+				tmpDisk->NTFS.MFTLocation.QuadPart = tmpDisk->NTFS.bootSector.MftStartLcn * tmpDisk->NTFS.BytesPerCluster;
+				tmpDisk->NTFS.MFT = NULL;
+				tmpDisk->IsLong = FALSE;
+				tmpDisk->NTFS.sizeMFT = 0;
+			}
+			else
+			{
+
+				//tmpDisk->type = UNKNOWN;
+				//tmpDisk->lFiles = NULL;
+				Application->MessageBoxW(L"Не удалось открыть диск", L"", MB_OK);
+			}
+		}
+		return tmpDisk;
+	}
+
+	delete tmpDisk;
+	return NULL;
+};
+
 
 
 
