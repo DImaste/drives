@@ -9,6 +9,7 @@
 #include <Vcl.Forms.hpp>
 #include "VirtualTrees.hpp"
 #include <Vcl.ExtCtrls.hpp>
+#include "IteratorThread.h"
 //---------------------------------------------------------------------------
 class TMainForm : public TForm
 {
@@ -17,14 +18,20 @@ __published:	// IDE-managed Components
 	TVirtualStringTree *ResultTree;
 	TButton *SearchButton;
 	TListBox *Television;
-	TButton *ReadBuffer;
 	TLabeledEdit *ByteEdit;
 	TListBox *LogBox;
+	TButton *Save;
+	TButton *StopButton;
 	void __fastcall SearchButtonClick(TObject *Sender);
-	void __fastcall ReadBufferClick(TObject *Sender);
+	void __fastcall SaveClick(TObject *Sender);
+	void __fastcall StopButtonClick(TObject *Sender);
+	void __fastcall ResultTreeGetText(TBaseVirtualTree *Sender, PVirtualNode Node, TColumnIndex Column,
+          TVSTTextType TextType, UnicodeString &CellText);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TMainForm(TComponent* Owner);
+
+	IteratorThread* myIteratorThread;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;

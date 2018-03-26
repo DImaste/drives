@@ -4,6 +4,7 @@
 #pragma hdrstop
 #include "FileSystem.h"
 #include "SearchThread.h"
+#include "IteratorThread.h"
 #include "Main.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
@@ -35,6 +36,7 @@ __fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool
 
 	//BufferAccessCS = new TCriticalSection;
 
+	CurrentCluster = 0;
 	ClusterSize = clusterSize;
 	OutBufferPtr = dataBufferPtr;
 	DataBuffer = new BYTE[clusterSize];
@@ -74,36 +76,57 @@ void __fastcall SearchThread::Execute()
 	Synchronize(&CompleteSearch);
 }
 //---------------------------------------------------------------------------
+
+void SearchThread::SetCurrentCluster(int Cluster)
+ {
+	CurrentCluster = Cluster;
+
+ }
+
+
+//---------------------------------------------------------------------------
 void SearchThread::CopyData()
 {
 	memcpy(DataBuffer, OutBufferPtr, ClusterSize);
 }
+
 //---------------------------------------------------------------------------
 void SearchThread::SearchData()
 {
-	// Провести поиск
-	Sleep(50);
-	// memcmp
-	bool matchFound = true;
 
-	if(matchFound)
+	// Провести поиск
+   if ( memcmp( DataBuffer, "\x49\x44\x33\x03", 4 ) == 0 )
+	{
+		memcpy( signature, "\x49\x44\x33\x03", 4 );
+		memcpy( extensionFile, ".mp3", 4 );
+		Synchronize(&AddMatch );
+	}
+
+
+	// memcmp
+   //	bool matchFound = true;
+
+   /*	if(matchFound)
 	{
 		Synchronize(&AddMatch);
-	}
+	} */
 }
 //---------------------------------------------------------------------------
 void __fastcall SearchThread::AddMatch()
 {
+	//PVirtualNode newNode = MainForm->ResultTree->AddChild(MainForm->ResultTree->RootNode);
+
 	PVirtualNode newNode = MainForm->ResultTree->AddChild(MainForm->ResultTree->RootNode);
+	FileTree* nodeData = (FileTree*)MainForm->ResultTree->GetNodeData(newNode);
+	nodeData-> currentCluster = CurrentCluster;
+	memcpy(nodeData->signature, signature, 4);
+	memcpy(nodeData->extensionFile, extensionFile, 4);
+
 }
+
+
 //---------------------------------------------------------------------------
 void __fastcall SearchThread::CompleteSearch()
 {
-	PDISKHANDLE mydisk;
-
-    mydis
-
-	MainForm->Television->Items->Add("Cluster Size = ");
-
 	Application->MessageBoxW(L"Поиск завершен!", L"", MB_OK);
 }

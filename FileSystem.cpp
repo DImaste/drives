@@ -12,146 +12,162 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-
-
 using namespace std;
 
-/*
+//---------------------------------------------------------------------------
 NTFS_FS::NTFS_FS()
 {
+	//FileHandle = 0;
+	//	WCHAR *filePath = MainForm->PathEdit->Text.c_str(); // there is the question
+	//	WCHAR *sign = MainForm->ByteEdit->Text.c_str(); // there is the question
 
+	fileHandle = CreateFileW(L"\\\\.\\F:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
+								);
+
+	if (fileHandle != INVALID_HANDLE_VALUE)
+	{
+			MainForm->LogBox->Items->Add("Opened Successfully");
+
+			result = true;
+	}
+	else
+	{
+			MainForm->LogBox->Items->Add("Can't open drive");
+			result = false;
+	}
+
+	//CloseHandle(fileHandle);
 }
 
-NTFS_FS::ReadFile()
+//---------------------------------------------------------------------------
+
+bool NTFS_FS::ReadBootBlock()
 {
-	WCHAR *fileName1 = L"\\\\.\\PhysicalDrive0"; // \\.\PhysicalDrive0, \\.\PhysicalDrive1 и т. д.
-	WCHAR *fileName2 = L"\\\\.\\C:"; // \\.\C:, \\.\D:
+	//BYTE *dataBuffer = new BYTE[512];  // allocate memory mbr size - no need dynamic
 
-	HANDLE fileHandle = CreateFileW
-		(
-			fileName, // Имя файла (WCHAR*)
-			GENERIC_READ,	  // Режим доступа
-			FILE_SHARE_READ | FILE_SHARE_WRITE, // Режим совместной работы
-			NULL, // Атрибуты безопасности
-			OPEN_EXISTING, // Способ открытия
-			FILE_ATTRIBUTE_NORMAL, // Флаги и атрибуты
-			NULL // Описатель (идентификатор) файла шаблона с правами доступа GENERIC_READ.
-		);
+	BYTE bootSector[512]; // длина загрузочного сектора
 
-	if(fileHandle == INVALID_HANDLE_VALUE)
-		{
-			Application->MessageBoxW(L"Невозможно открыть файл", L"", MB_OK);
-		}
-
-	BYTE *dataBuffer = new BYTE[2000];  // allocate memory
-
-	LARGE_INTEGER sectorOffset;
+	ULONGLONG startOffset = 0;
+	LARGE_INTEGER sectorOffset;		// DWORD LowPart, LONG  HighPart, LONGLONG QuadPart
 	sectorOffset.QuadPart = startOffset;
 
-	// Задать позицию
 	unsigned long currentPosition = SetFilePointer
-			(
-				fileHandle,
-				sectorOffset.LowPart,
-				&sectorOffset.HighPart,
-				FILE_BEGIN // Точка в файле, относительно которой необходимо позиционироваться (FILE_BEGIN, FILE_CURRENT, FILE_END)
-			);
+	(
+			fileHandle,
+			sectorOffset.LowPart,
+			&sectorOffset.HighPart,
+			FILE_BEGIN
+	);
 
 	if(currentPosition != sectorOffset.LowPart)
 	{
-		Application->MessageBoxW(L"Невозможно задать позицию", L"", MB_OK);
+			Application->MessageBoxW(L"Dont", L"", MB_OK);
 	}
 
-	// Чтение данных
+	DWORD bytesToRead = 512;
+	DWORD bytesRead;         //already
+
 	bool readResult = ReadFile
-			(
-				fileHandle,
-				dataBuffer,
-				bytesToRead,
-				&bytesRead,
-				NULL
-			);
+	(
+			fileHandle,
+			bootSector,
+			bytesToRead,
+			&bytesRead,
+			NULL
+	);
 
-	if(!readResult || bytesRead != bytesToRead)
+	if ( !readResult || bytesRead != bytesToRead )
 	{
-		Application->MessageBoxW(L"Невозможно прочесть файл", L"", MB_OK);
+		Application->MessageBoxW(L"ReadMBRError", L"", MB_OK);
+		return false;
 	}
 
-	// Закрыть файл
-	CloseHandle(fileHandle);
+	infoNTFS = (BOOT_BLOCK*)bootSector;
 
+	BytesPerSector = infoNTFS->BytesPerSector;
+	SectorPerCluster = infoNTFS->SectorsPerCluster;
+	ClusterSize =  BytesPerSector*SectorPerCluster;
+	TotalSectors = infoNTFS->TotalSectors;
+	strcpy_s(OEMID, strlen(infoNTFS->OEMID )+1, infoNTFS->OEMID);
+
+   return true;
+}
+//---------------------------------------------------------------------------
+
+ULONGLONG NTFS_FS::GetTotalSectors()
+{
+	return TotalSectors;
 }
 
- int NTFS_FS::GetDiskInfo()
+//---------------------------------------------------------------------------
+
+BYTE NTFS_FS::GetSectorPerCluster()
 {
-
-
-	return ClusterSize;
+	return SectorPerCluster;
 }
 
+//---------------------------------------------------------------------------
 
-
-int NTFS_FS::GetClusterSize()
+BYTE* NTFS_FS::GetOEMName()
 {
-	int ClusterSize = 4096;
-
-	return ClusterSize;
+	return OEMID;
 }
 
-__int64 NTFS_FS::GetFileSystemSize()
-{
+//---------------------------------------------------------------------------
 
-	return FileSystemSize;
+UINT16 NTFS_FS::GetBytesPerSector()
+{
+	return BytesPerSector;
 }
 
+//---------------------------------------------------------------------------
 
-*/
-
-
-
-	PDISKHANDLE OpenDisk(LPCTSTR disk)
+HANDLE NTFS_FS::GetFileHandle()
 {
-	PDISKHANDLE tmpDisk;
-	DWORD read;
-	tmpDisk = new DISKHANDLE;
-	memset(tmpDisk, 0, sizeof(DISKHANDLE));
-	tmpDisk->fileHandle = CreateFile(disk, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	return fileHandle;
+}
 
-	if (tmpDisk->fileHandle != INVALID_HANDLE_VALUE)
-	{
-		ReadFile(tmpDisk->fileHandle, &tmpDisk->NTFS.bootSector, sizeof(BOOT_BLOCK), &read, NULL);
-		if (read==sizeof(BOOT_BLOCK))
+//---------------------------------------------------------------------------
+
+void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
+{
+	fileHandle = FileSystemHandle;
+}
+
+//---------------------------------------------------------------------------
+
+bool NTFS_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
+{
+	ULONGLONG StartOffset = StartCluster*ClusterSize;
+	DWORD BytesToRead = NumberOfClusters*ClusterSize;
+	DWORD BytesRead;
+    LARGE_INTEGER SectorOffset;
+	SectorOffset.QuadPart = StartOffset;
+
+	unsigned long currentPosition = SetFilePointer
+		(
+			fileHandle,
+			SectorOffset.LowPart,
+			&SectorOffset.HighPart,
+			FILE_BEGIN
+		);
+	if(currentPosition != SectorOffset.LowPart)
 		{
-			if (strncmp("NTFS",(const char*) &tmpDisk->NTFS.bootSector.Format, 4)==0)
-			{
-				//tmpDisk->type = NTFSDISK;
-				tmpDisk->NTFS.BytesPerCluster = tmpDisk->NTFS.bootSector.BytesPerSector * tmpDisk->NTFS.bootSector.SectorsPerCluster;
-				tmpDisk->NTFS.BytesPerFileRecord = tmpDisk->NTFS.bootSector.ClustersPerFileRecord < 0x80 ? tmpDisk->NTFS.bootSector.ClustersPerFileRecord * tmpDisk->NTFS.BytesPerCluster: 1 <<(0x100 - tmpDisk->NTFS.bootSector.ClustersPerFileRecord);
-
-				tmpDisk->NTFS.complete = FALSE;
-				tmpDisk->NTFS.MFTLocation.QuadPart = tmpDisk->NTFS.bootSector.MftStartLcn * tmpDisk->NTFS.BytesPerCluster;
-				tmpDisk->NTFS.MFT = NULL;
-				tmpDisk->IsLong = FALSE;
-				tmpDisk->NTFS.sizeMFT = 0;
-			}
-			else
-			{
-
-				//tmpDisk->type = UNKNOWN;
-				//tmpDisk->lFiles = NULL;
-				Application->MessageBoxW(L"Не удалось открыть диск", L"", MB_OK);
-			}
+			Application->MessageBoxW(L"DontCluster", L"", MB_OK);
+			return false;
 		}
-		return tmpDisk;
-	}
 
-	delete tmpDisk;
-	return NULL;
-};
+	bool Result = ReadFile(fileHandle, dataBuffer, BytesToRead, &BytesRead, NULL);
 
+	if(!Result || BytesRead != BytesToRead)
+		{
+			Application->MessageBoxW(L"DontReadClusterRead", L"", MB_OK);
+			return false;
+		}
 
+	return true;
 
-
-
+}
 
 

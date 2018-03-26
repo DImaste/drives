@@ -2,94 +2,106 @@
 
 #ifndef FileSystemH
 #define FileSystemH
+
+//---------------------------------------------------------------------------
+#endif
+
 #include <windows.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-//#include "FileSystem.cpp"
+#include "Main.h"
+
 
 
 #pragma pack(push,1)
 
-typedef struct {
-	UCHAR Jump[3];
-	UCHAR Format[8];
-	USHORT BytesPerSector;
-	UCHAR SectorsPerCluster;
-	USHORT BootSectors;
-	UCHAR Mbz1;
-	USHORT Mbz2;
-	USHORT Reserved1;
-	UCHAR MediaType;
-	USHORT Mbz3;
-	USHORT SectorsPerTrack;
-	USHORT NumberOfHeads;
-	ULONG PartitionOffset;
-	ULONG Rserved2[2];
+
+typedef struct
+{
+
+	BYTE Jump[3];
+	BYTE OEMID[8];
+	UINT16 BytesPerSector;
+	BYTE SectorsPerCluster;
+	BYTE padding1[2];
+	BYTE padding2[5];
+	BYTE typeStore;
+	BYTE padding3[2];
+	BYTE padding4[8];
+	BYTE padding5[4];
+	BYTE padding6[4];
 	ULONGLONG TotalSectors;
 	ULONGLONG MftStartLcn;
 	ULONGLONG Mft2StartLcn;
-	ULONG ClustersPerFileRecord;
-	ULONG ClustersPerIndexBlock;
+	BYTE sizeMFT;
+	BYTE padding7[3];
+	BYTE sizeIndex;
+	BYTE padding8[3];
 	ULONGLONG VolumeSerialNumber;
-	UCHAR Code[0x1AE];
-	USHORT BootSignature;
-}BOOT_BLOCK, *PBOOT_BLOCK;
+	BYTE padding9[ 4 ];
+	BYTE padding10[ 426 ];
+	BYTE Checksum[ 2 ];
 
 
-typedef struct {
-	HANDLE fileHandle;
-	DWORD type;
-	DWORD IsLong;
-	DWORD filesSize;
-	DWORD realFiles;
-	WCHAR DosDevice;
-	union
-	{
-		struct
-		{
-			BOOT_BLOCK bootSector;
-			DWORD BytesPerFileRecord;
-			DWORD BytesPerCluster;
-			BOOL complete;
-			DWORD sizeMFT;
-			DWORD entryCount;
-			ULARGE_INTEGER MFTLocation;
-			UCHAR *MFT;
-			UCHAR *Bitmap;
-		} NTFS;
-	};
-}DISKHANDLE, *PDISKHANDLE;
+	/*        //NOT ALL THE RECORD :(
+	UCHAR Jump[3];       // 0x00 for what?
+	ULONGLONG OEMID[8];     // 0x03
+	UINT16 BytesPerSector;    //0x0B - 0x0002
+	BYTE SectorsPerCluster;  // 0x0D - 0x08
+	WORD ReservedSectors;   // 0x0E - 0x0000
+	BYTE MediaDescriptor;   //  0x15 - 0xF8
+	WORD SectorsPerTrack;  // 0x18 - 0x0000
+	WORD NumberOfHeads;  //0x1A - 0xFF00
+	ULONGLONG TotalSectors; // 0x28 - 0x4AF57F0000000000
+	ULONGLONG MftStartLcn;   // 0x30 - 0x0400000000000000
+	ULONGLONG Mft2StartLcn;   // 0x38 - 0x54FF070000000000
+	DWORD ClustersPerFileRecord; //0x40 - 0xF6000000
+	BYTE ClustersPerIndexBlock; //0x44 - 0x01
+	ULONGLONG VolumeSerialNumber;   // 0x48 - 0x14A51B74C91B741C
+	DWORD Checksum; //0x50 - 0x00000000    */
+}BOOT_BLOCK;
 
-//PDISKHANDLE OpenDisk(LPCTSTR disk);
+#pragma pack(pop)
 
-
-
- /*
  class NTFS_FS
 {
+protected:
+	HANDLE fileHandle;
+	UINT16 BytesPerSector;
+	BYTE SectorPerCluster;
+	ULONGLONG TotalSectors;
+	BYTE OEMID[9];
+
 private:
+
+	BOOT_BLOCK* infoNTFS;
 	int ClusterSize;
 	__int64 Size;
-	wstring FileName;      	//путь к файлу или диску
-	WCHAR *FileName;
 
 public:
-
-	NTFS_FS();		//конструктор класса
-
-	int GetClusterSize();		// набор внешних данных - интерфейс класса
-	__int64 GetFileSystemSize();
-	intReadCluster(BYTE *outData);
-	DISKHANDLE *mydisk = new DISKHANDLE;
-
-
-
-
+	bool result;
+	NTFS_FS()	;  	//конструктор класса
+	bool ReadBootBlock();
+	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
+	HANDLE NTFS_FS::GetFileHandle();
+	UINT16 NTFS_FS::GetBytesPerSector();
+	BYTE* NTFS_FS::GetOEMName();
+	BYTE NTFS_FS::GetSectorPerCluster();
+	ULONGLONG NTFS_FS::GetTotalSectors();
+	void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle);
 
 };
 
- */
-//---------------------------------------------------------------------------
-#endif
+class Container
+{
+//public
+// bool result;
+
+};
+
+
+
+
+

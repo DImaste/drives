@@ -23,10 +23,10 @@ object MainForm: TMainForm
     EditLabel.Height = 13
     EditLabel.Caption = #1055#1091#1090#1100' '#1082' '#1080#1084#1077#1085#1080' '#1092#1072#1081#1083#1072' ('#1088#1072#1079#1076#1077#1083#1072')'
     TabOrder = 0
-    Text = '\\.\C:'
+    Text = '\\.\F:'
   end
   object ResultTree: TVirtualStringTree
-    Left = 488
+    Left = 489
     Top = 105
     Width = 321
     Height = 296
@@ -36,12 +36,25 @@ object MainForm: TMainForm
     Header.Font.Height = -11
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
-    Header.MainColumn = -1
     TabOrder = 1
-    Columns = <>
+    TreeOptions.PaintOptions = [toHotTrack, toShowBackground, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toUseBlendedImages, toFullVertGridLines]
+    OnGetText = ResultTreeGetText
+    Columns = <
+      item
+        Position = 0
+        Width = 100
+      end
+      item
+        Position = 1
+        Width = 100
+      end
+      item
+        Position = 2
+        Width = 100
+      end>
   end
   object SearchButton: TButton
-    Left = 288
+    Left = 183
     Top = 62
     Width = 75
     Height = 25
@@ -57,25 +70,16 @@ object MainForm: TMainForm
     ItemHeight = 13
     TabOrder = 3
   end
-  object ReadBuffer: TButton
-    Left = 376
-    Top = 62
-    Width = 81
-    Height = 25
-    Caption = #1063#1090#1077#1085#1080#1077
-    TabOrder = 4
-    OnClick = ReadBufferClick
-  end
   object ByteEdit: TLabeledEdit
     Left = 8
     Top = 64
-    Width = 193
+    Width = 169
     Height = 21
-    EditLabel.Width = 173
+    EditLabel.Width = 77
     EditLabel.Height = 13
-    EditLabel.Caption = #1050#1086#1083#1080#1095#1082#1089#1090#1074#1086' '#1073#1072#1081#1090' '#1076#1083#1103' '#1089#1095#1080#1090#1099#1074#1072#1085#1080#1103
-    TabOrder = 5
-    Text = '2'
+    EditLabel.Caption = #1057#1080#1075#1085#1072#1090#1091#1088#1072' MP3'
+    TabOrder = 4
+    Text = 'ID3....'
   end
   object LogBox: TListBox
     Left = 488
@@ -83,6 +87,24 @@ object MainForm: TMainForm
     Width = 322
     Height = 91
     ItemHeight = 13
+    TabOrder = 5
+  end
+  object Save: TButton
+    Left = 345
+    Top = 62
+    Width = 112
+    Height = 25
+    Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
     TabOrder = 6
+    OnClick = SaveClick
+  end
+  object StopButton: TButton
+    Left = 264
+    Top = 62
+    Width = 75
+    Height = 25
+    Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100
+    TabOrder = 7
+    OnClick = StopButtonClick
   end
 end
