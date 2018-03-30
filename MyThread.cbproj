@@ -124,10 +124,6 @@
             <BuildOrder>1</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
-        <RcItem Include="save_64.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>PngImage_1</ResourceId>
-        </RcItem>
         <CppCompile Include="SearchThread.cpp">
             <DependentOn>SearchThread.h</DependentOn>
             <BuildOrder>4</BuildOrder>

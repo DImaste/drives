@@ -7,6 +7,8 @@
 #include "IteratorThread.h"
 #include "FileSystem.h"
 #include "SearchThread.h"
+#include <string>
+#include <vector>
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -45,18 +47,35 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 void __fastcall TMainForm::SaveClick(TObject *Sender)
 {
 
- FILE *fp = fopen ( "Attributes.txt","w");
-  for ( int ii=0; ii<Television->GetCount(); ii++ )
-  {
-	int size = Television->GetTextLen();
-	//char str[MAX_PATH]={0};
-	//WCHAR* str ;//AX_PATH]={0};
-	std::auto_ptr <WCHAR> Buffer(new WCHAR[size]);
-	Television->GetTextBuf(Buffer.get(),size);   //(ii,str);
-	LogBox->Items->Add(size);
-	fprintf(fp,"%s\n",Buffer.get());
-  }
-  fclose(fp);
+	LogBox->Items->Add("Check that stuff");
+
+	vector<wstring> s;
+	s.resize(Television->Items->Count);
+
+	FILE *fp = fopen ( "Attributes.txt","w");
+
+	for (int i=0;i<Television->Items->Count; i++)
+		{
+
+			s[i]=wstring(Television->Items->Strings[i].c_str());
+			fprintf(fp,"%s\n",s[i]);
+
+		}
+
+
+	/*
+	for ( int ii=0; ii<Television->GetCount(); ii++ )
+	 {
+		int size = Television->GetTextLen();
+		//char str[MAX_PATH]={0};
+		//WCHAR* str ;//AX_PATH]={0};
+		std::auto_ptr <WCHAR> Buffer(new WCHAR[size]);
+		Television->GetTextBuf(Buffer.get(),size);   //(ii,str);
+		LogBox->Items->Add(size);
+		fprintf(fp,"%s\n",Buffer.get());
+	 }
+	*/
+	fclose(fp);
 
 }
 //---------------------------------------------------------------------------
