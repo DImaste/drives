@@ -21,3 +21,11 @@ Win32/Debug/MyThread.obj
 Win32/Debug/MyThread.pch
 Win32/Debug/MyThread.pdi
 Win32/Debug/SearchThread.obj
+*.astcache
+*.astinfo
+*.ini
+*.ilc
+*.ild
+*.ilf
+*.ils
+*.tds
