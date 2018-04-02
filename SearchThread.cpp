@@ -1,3 +1,4 @@
+
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
@@ -6,6 +7,12 @@
 #include "SearchThread.h"
 #include "IteratorThread.h"
 #include "Main.h"
+#include <string>
+#include <vector>
+#include <list>
+
+using namespace std;
+
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -25,10 +32,12 @@
 
 //---------------------------------------------------------------------------
 
-__fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended)
+__fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount )
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
+	MainForm->Progress->Max = clusterscount;
+	point = 1;
 
 	// multithread events
 	BufferReadyEvent  = new TEvent(NULL, true, false,"",false);
@@ -61,6 +70,8 @@ void __fastcall SearchThread::Execute()
 
 				// Запустить поиск
 				SearchData();
+				MainForm->Progress->Position = point;
+				point++;
 				//BufferAccessCS->Leave();
 			}
 		}
@@ -93,13 +104,43 @@ void SearchThread::CopyData()
 //---------------------------------------------------------------------------
 void SearchThread::SearchData()
 {
+	vector<const char *> signatures;
+
+
+   signatures.push_back("\x49\x44\x33"); //mp3
+   signatures.push_back("\x21\x3C\x61\x72\x63\x68\x3E"); //deb
+   signatures.push_back("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"); //png    89 50 4E 47 0D 0A 1A 0A
+   signatures.push_back("\x37\x7A\xBC\xAF\x27\x1C"); //7zip    37 7A BC AF 27 1C
+
+   vector<int> sign_size;
+
+   sign_size.push_back(3);
+   sign_size.push_back(7);
+   sign_size.push_back(8);
+   sign_size.push_back(6);
+
+   vector<const char *> sign_name;
+
+   sign_name.push_back(".mp3");
+   sign_name.push_back(".deb");
+   sign_name.push_back(".png");
+   sign_name.push_back(".7z ");
+
+
+
+
+   for (int i=0; i<signatures.size();i++)
+	{
 
 	// Провести поиск
-   if ( memcmp( DataBuffer, "\x49\x44\x33\x03", 4 ) == 0 )
-	{
-		memcpy( signature, "\x49\x44\x33\x03", 4 );
-		memcpy( extensionFile, ".mp3", 4 );
-		Synchronize(&AddMatch );
+		 if ( memcmp( DataBuffer, signatures[i], sign_size[i]) == 0 )
+		{
+			memcpy( signature, signatures[i], sign_size[i]);
+			memcpy( extensionFile, sign_name[i], 4 );
+			Synchronize(&AddMatch );
+		}
+
+
 	}
 
 

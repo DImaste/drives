@@ -29,3 +29,7 @@ Win32/Debug/SearchThread.obj
 *.ilf
 *.ils
 *.tds
+*.~1~
+*.~2~
+__recovery/SearchThread.cpp
+__recovery/SearchThread.h

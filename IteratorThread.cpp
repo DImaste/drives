@@ -89,7 +89,7 @@ void __fastcall IteratorThread::Execute()
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 
-	MySearchThread = new SearchThread(dataBuffer,clusterSize,false);  //new thread
+	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 
 	if (memcmp(mydisk.GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
 		{

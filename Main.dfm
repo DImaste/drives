@@ -66,7 +66,7 @@ object MainForm: TMainForm
     Left = 8
     Top = 105
     Width = 449
-    Height = 296
+    Height = 264
     ItemHeight = 13
     TabOrder = 3
   end
@@ -75,11 +75,11 @@ object MainForm: TMainForm
     Top = 64
     Width = 169
     Height = 21
-    EditLabel.Width = 77
+    EditLabel.Width = 62
     EditLabel.Height = 13
-    EditLabel.Caption = #1057#1080#1075#1085#1072#1090#1091#1088#1072' MP3'
+    EditLabel.Caption = 'nothing at all'
     TabOrder = 4
-    Text = 'ID3....'
+    Text = 'none'
   end
   object LogBox: TListBox
     Left = 488
@@ -106,5 +106,12 @@ object MainForm: TMainForm
     Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100
     TabOrder = 7
     OnClick = StopButtonClick
+  end
+  object Progress: TProgressBar
+    Left = 8
+    Top = 375
+    Width = 449
+    Height = 26
+    TabOrder = 8
   end
 end

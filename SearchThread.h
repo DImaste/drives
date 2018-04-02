@@ -5,6 +5,11 @@
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include <System.SyncObjs.hpp>
+#include <string>
+#include <vector>
+#include <list>
+
+using namespace std;
 //---------------------------------------------------------------------------
 // Критическая секция добавления результатов поиска
 	//TCriticalSection *BufferAccessCS;
@@ -14,9 +19,10 @@ const int WaitDelayMs = 2000;
 
 typedef struct
 {
+
 	__int64 currentCluster;
-	BYTE signature[5];
-	BYTE extensionFile[5];
+	BYTE signature[4];
+	BYTE extensionFile[4];
 } FileTree;
 
 
@@ -29,6 +35,7 @@ private:
 	int CurrentCluster;
 	BYTE signature[5];
 	BYTE extensionFile[5];
+	__int64 point;
 
 
 	void CopyData();
@@ -39,13 +46,22 @@ private:
 
 protected:
 	void __fastcall Execute();
+
+
+
+
+
+
 public:
-	__fastcall SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended);
+	__fastcall SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount);
 	 void SetCurrentCluster(int Cluster);
 
 	// События, используемые для синхронизации
 	TEvent *BufferReadyEvent;
 	TEvent *BufferCopiedEvent;
+
+
+
 };
 //---------------------------------------------------------------------------
 #endif

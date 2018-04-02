@@ -21,7 +21,7 @@ NTFS_FS::NTFS_FS()
 	//	WCHAR *filePath = MainForm->PathEdit->Text.c_str(); // there is the question
 	//	WCHAR *sign = MainForm->ByteEdit->Text.c_str(); // there is the question
 
-	fileHandle = CreateFileW(L"\\\\.\\F:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+	fileHandle = CreateFileW(MainForm->PathEdit->Text.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
 								);
 

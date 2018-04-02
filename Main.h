@@ -10,6 +10,7 @@
 #include "VirtualTrees.hpp"
 #include <Vcl.ExtCtrls.hpp>
 #include "IteratorThread.h"
+#include <Vcl.ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TMainForm : public TForm
 {
@@ -22,6 +23,7 @@ __published:	// IDE-managed Components
 	TListBox *LogBox;
 	TButton *Save;
 	TButton *StopButton;
+	TProgressBar *Progress;
 	void __fastcall SearchButtonClick(TObject *Sender);
 	void __fastcall SaveClick(TObject *Sender);
 	void __fastcall StopButtonClick(TObject *Sender);
