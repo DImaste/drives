@@ -33,3 +33,4 @@ Win32/Debug/SearchThread.obj
 *.~2~
 __recovery/SearchThread.cpp
 __recovery/SearchThread.h
+*.~3~

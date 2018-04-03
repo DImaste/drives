@@ -47,6 +47,11 @@ private:
 protected:
 	void __fastcall Execute();
 
+	//vectors
+	vector<const char *> signatures;
+	vector<int> sign_size;
+	vector<const char *> sign_name;
+
 
 
 
