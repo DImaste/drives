@@ -4,7 +4,7 @@ object MainForm: TMainForm
   BorderStyle = bsDialog
   Caption = 'NTFS Shark'
   ClientHeight = 423
-  ClientWidth = 818
+  ClientWidth = 803
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,7 +28,7 @@ object MainForm: TMainForm
   object ResultTree: TVirtualStringTree
     Left = 489
     Top = 105
-    Width = 321
+    Width = 304
     Height = 296
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
@@ -73,18 +73,18 @@ object MainForm: TMainForm
   object ByteEdit: TLabeledEdit
     Left = 8
     Top = 64
-    Width = 169
+    Width = 73
     Height = 21
-    EditLabel.Width = 62
+    EditLabel.Width = 61
     EditLabel.Height = 13
-    EditLabel.Caption = 'nothing at all'
+    EditLabel.Caption = 'Start Cluster'
     TabOrder = 4
-    Text = 'none'
+    Text = '0'
   end
   object LogBox: TListBox
     Left = 488
     Top = 8
-    Width = 322
+    Width = 305
     Height = 91
     ItemHeight = 13
     TabOrder = 5
@@ -113,5 +113,16 @@ object MainForm: TMainForm
     Width = 449
     Height = 26
     TabOrder = 8
+  end
+  object LabeledEdit1: TLabeledEdit
+    Left = 96
+    Top = 64
+    Width = 81
+    Height = 21
+    EditLabel.Width = 55
+    EditLabel.Height = 13
+    EditLabel.Caption = 'End Cluster'
+    TabOrder = 9
+    Text = 'end'
   end
 end

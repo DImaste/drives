@@ -124,6 +124,10 @@
             <BuildOrder>1</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
+        <CppCompile Include="Patterns.cpp">
+            <DependentOn>Patterns.h</DependentOn>
+            <BuildOrder>6</BuildOrder>
+        </CppCompile>
         <CppCompile Include="SearchThread.cpp">
             <DependentOn>SearchThread.h</DependentOn>
             <BuildOrder>4</BuildOrder>
