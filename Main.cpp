@@ -39,7 +39,7 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 	LogBox->Items->Add("   ");
 	LogBox->Items->Add("------New Search------");
 	LogBox->Items->Add("   ");
-	myIteratorThread = new IteratorThread(PathEdit->Text.c_str(),ByteEdit->Text.c_str(), false);
+	myIteratorThread = new IteratorThread(PathEdit->Text.c_str(),false);
 }
 
 //---------------------------------------------------------------------------
@@ -111,4 +111,5 @@ void __fastcall TMainForm::ResultTreeGetText(TBaseVirtualTree *Sender, PVirtualN
 	}
 }
 //---------------------------------------------------------------------------
+
 

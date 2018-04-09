@@ -70,7 +70,7 @@ object MainForm: TMainForm
     ItemHeight = 13
     TabOrder = 3
   end
-  object ByteEdit: TLabeledEdit
+  object Start: TLabeledEdit
     Left = 8
     Top = 64
     Width = 73
@@ -114,7 +114,7 @@ object MainForm: TMainForm
     Height = 26
     TabOrder = 8
   end
-  object LabeledEdit1: TLabeledEdit
+  object End: TLabeledEdit
     Left = 96
     Top = 64
     Width = 81

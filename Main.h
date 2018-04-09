@@ -19,12 +19,12 @@ __published:	// IDE-managed Components
 	TVirtualStringTree *ResultTree;
 	TButton *SearchButton;
 	TListBox *Television;
-	TLabeledEdit *ByteEdit;
+	TLabeledEdit *Start;
 	TListBox *LogBox;
 	TButton *Save;
 	TButton *StopButton;
 	TProgressBar *Progress;
-	TLabeledEdit *LabeledEdit1;
+	TLabeledEdit *End;
 	void __fastcall SearchButtonClick(TObject *Sender);
 	void __fastcall SaveClick(TObject *Sender);
 	void __fastcall StopButtonClick(TObject *Sender);

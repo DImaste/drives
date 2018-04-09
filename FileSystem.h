@@ -7,10 +7,6 @@
 #endif
 
 #include <windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
 #include "Main.h"
 #include <string>
 #include <vector>
@@ -24,7 +20,6 @@
 
 typedef struct
 {
-
 	BYTE Jump[3];
 	BYTE OEMID[8];
 	UINT16 BytesPerSector;
@@ -50,6 +45,9 @@ typedef struct
 
 }BOOT_BLOCK;
 
+
+
+
 #pragma pack(pop)
 
  class NTFS_FS
@@ -60,6 +58,7 @@ protected:
 	BYTE SectorPerCluster;
 	ULONGLONG TotalSectors;
 	BYTE OEMID[9];
+	WCHAR* path;
 
 private:
 
@@ -69,7 +68,7 @@ private:
 
 public:
 	bool result;
-	NTFS_FS()	;  	//конструктор класса
+	NTFS_FS(/*WCHAR *filePath*/)	;  	//конструктор класса
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
 	HANDLE NTFS_FS::GetFileHandle();

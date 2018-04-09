@@ -1,15 +1,18 @@
 //---------------------------------------------------------------------------
+#pragma hdrstop
 
 #include <vcl.h>
 #include <windows.h>
-#pragma hdrstop
-
 #include "IteratorThread.h"
-#include "FileSystem.h"
-#include "Patterns.h"
+#include "PatternIterator.h"
+//#include "FileSystem.h"
+//#include "PatternDecorator.h"
 
 using namespace std;
 #pragma package(smart_init)
+
+
+
 
 //---------------------------------------------------------------------------
 
@@ -29,13 +32,13 @@ using namespace std;
 
 //---------------------------------------------------------------------------
 
-	//how to use parameters ????
-
-__fastcall IteratorThread::IteratorThread(WCHAR *filePath, WCHAR *sign, bool CreateSuspended)
+__fastcall IteratorThread::IteratorThread(WCHAR *filePath, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 
 	FreeOnTerminate = true;
+	path= filePath;
+	//mydisk = new NTFS_FS(path);
 
 }
 //---------------------------------------------------------------------------
@@ -43,11 +46,13 @@ void __fastcall IteratorThread::Execute()
 {
 	// bool result=false;
 
-	 NTFS_FS mydisk = NTFS_FS();
+	// mydisk = new NTFS_FS(path);
+	 NTFS_FS mydisk = new NTFS_FS();
 	 FileSystemHandle = mydisk.GetFileHandle();
 
 	 int BytesPerCluster;
 	 int TotalClusters;
+
 
 		if (mydisk.result)
 		{
@@ -85,25 +90,44 @@ void __fastcall IteratorThread::Execute()
 			MainForm->LogBox->Items->Add("nOk");
 		}
 
+	int BeginCluster;
+	int EndCluster;
+
+	if  (MainForm->End->Text=="end")
+	{
+		BeginCluster = StrToInt(MainForm->Start->Text);
+		EndCluster = TotalClusters;
+	}
+	else
+	{
+	   BeginCluster = StrToInt(MainForm->Start->Text) ;
+	   EndCluster = StrToInt(MainForm->End->Text);
+	}
+
 
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
-	int index=0;
+	//int index=0;
 
-	ArrayIterator it (index , TotalClusters);
+   //	NTFSClusterIterator *ArrIterator  =new NTFSClusterIterator( &mydisk );
+
+	NTFSClusterIterator *ArrIterator = new NTFSDecorator( new NTFSClusterIterator( &mydisk ), BeginCluster, EndCluster );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 
 	if (memcmp(mydisk.GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
 		{
-			for ( int i = 0; i < TotalClusters; i++)
+			for (ArrIterator->First(); !ArrIterator->IsDone(); ArrIterator->Next())
 				{
-					if (!mydisk.ReadCluster( i, 1, dataBuffer ) )
+				   /*	if (!mydisk.ReadCluster( i, 1, dataBuffer ) )
 						{
 							Application->MessageBoxW(L"ReadClusterError", L"", MB_OK);
 							break;
-						}
+						}   */
+
+						 CurrentCluster = ArrIterator->GetCurrent();
+
 
 					// Заблокировать доступ к буферу
 					//BufferAccessCS->Enter();
@@ -120,7 +144,8 @@ void __fastcall IteratorThread::Execute()
 						}
 
 
-					MySearchThread->SetCurrentCluster(i);
+					MySearchThread->SetCurrentCluster(ArrIterator->GetCurrentIndex());
+
 					MySearchThread->BufferCopiedEvent->ResetEvent();
 
 					if ( Terminated )
@@ -143,6 +168,7 @@ void __fastcall IteratorThread::Execute()
 
 	CloseHandle(FileSystemHandle);
 	delete[] dataBuffer;
+	delete[] ArrIterator;
 }
 //---------------------------------------------------------------------------
 

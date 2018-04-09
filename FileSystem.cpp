@@ -15,7 +15,7 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-NTFS_FS::NTFS_FS()
+NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
 {
 	//FileHandle = 0;
 	//	WCHAR *filePath = MainForm->PathEdit->Text.c_str(); // there is the question
@@ -36,6 +36,14 @@ NTFS_FS::NTFS_FS()
 			MainForm->LogBox->Items->Add("Can't open drive");
 			result = false;
 	}
+
+   /*	path=filePath; */
+
+	BytesPerSector=0;
+	SectorPerCluster=0;
+	TotalSectors=0;
+
+
 
 	//CloseHandle(fileHandle);
 }
@@ -91,7 +99,7 @@ bool NTFS_FS::ReadBootBlock()
 	TotalSectors = infoNTFS->TotalSectors;
 	strcpy_s(OEMID, strlen(infoNTFS->OEMID )+1, infoNTFS->OEMID);
 
-   return true;
+	return true;
 }
 //---------------------------------------------------------------------------
 
