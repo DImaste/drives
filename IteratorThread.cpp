@@ -6,6 +6,7 @@
 
 #include "IteratorThread.h"
 #include "FileSystem.h"
+#include "Patterns.h"
 
 using namespace std;
 #pragma package(smart_init)
@@ -88,6 +89,9 @@ void __fastcall IteratorThread::Execute()
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
+	int index=0;
+
+	ArrayIterator it (index , TotalClusters);
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 

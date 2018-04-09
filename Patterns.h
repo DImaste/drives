@@ -14,6 +14,9 @@
 #include <list>
 #include <stdio.h>
 
+#include <iostream>
+using namespace std;
+
 
 
 
@@ -26,36 +29,31 @@
  template <class Type> class Iterator
 {
 	protected:
-		Iterator() {}
+
 
 	public:
+        Iterator() {}
 		virtual ~Iterator() {}
 		virtual void First() = 0; //первый элемент
 		virtual void Next() = 0;
-		virtual bool IsDone() const =0;
-		virtual Type GetCurrent() const = 0;
-}
+		virtual bool IsDone(); //const =0;
+		virtual Type GetCurrent(); //const = 0;
+} ;
 
 
-class ArrayIterator : public Iterator <BYTE> //исходный код не пишут в заголовочном файле здесь просто наглядно
+class ArrayIterator : public Iterator <int>  //исходный код не пишут в заголовочном файле здесь просто наглядно
 {
-private:
-
-		BYTE *Container;  //указывает на начало контейнера
-		int ContainerSize;
-		int CurrentIndex;
+	   // typedef Iterator <BYTE> Parent;
+protected:
+	   int totalClusters;
+	   int index;
 
 public:
-		ArrayIterator(BYTE *container, int containerSize)
-		{
-		Container=container;
-		ContainerSize=containerSize;
-		CurrentIndex=0;
-		}
+		ArrayIterator(int Index ,int TotalClusters) ;
 		~ArrayIterator() {}
-		virtual void First() {CurrentIndex=0; } //первый элементам
-		virtual void Next()  {CurrentIndex++; }
-		virtual bool IsDone() const {return (CurrentIndex>=СontainerSize);}	//функция возвращает isdone, когда перешел границу массива
-		virtual BYTE GetCurrent() {return Container(CurrentIndex);}
+		void First();
+		void Next();
+		bool IsDone();
+		int GetCurrent();
 
-}
+}   ;
