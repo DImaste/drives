@@ -92,7 +92,7 @@ protected:
 public:
 	DriveDecorator(DriveIterator * it, int beginCluster, int endCluster);
 
-	virtual ~DriveDecorator();
+	//virtual ~DriveDecorator();
 	virtual void First();
 	virtual void Next();
 	virtual bool IsDone() const ;

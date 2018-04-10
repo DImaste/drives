@@ -109,9 +109,11 @@ void __fastcall IteratorThread::Execute()
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 
-   //	DriveIterator *ArrIterator  =new DriveIterator( &mydisk );
+	DriveIterator *It  =new DriveIterator( &mydisk );
 
-	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
+   //	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
+
+	DriveDecorator *ArrIterator = new DriveDecorator( It, BeginCluster, EndCluster );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 

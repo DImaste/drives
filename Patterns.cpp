@@ -72,7 +72,7 @@ int DriveIterator::GetCurrentIndex() const
 
 // Decorator realization
 
-NTFSDecorator::NTFSDecorator(NTFSClusterIterator * it, int beginCluster, int endCluster) : IteratorDecorator <ClusterDisk> (it)
+DriveDecorator::DriveDecorator(DriveIterator * it, int beginCluster, int endCluster) : Decorator <ClusterDisk> (it)
 {
 	BeginCluster = beginCluster;
 	EndCluster = endCluster;
@@ -80,7 +80,7 @@ NTFSDecorator::NTFSDecorator(NTFSClusterIterator * it, int beginCluster, int end
 
 // ------------------------------------------------------------------------------
 
-void NTFSDecorator::First()
+void DriveDecorator::First()
 {
 	for (It->First(); !It->IsDone(); It->Next())
 	{
@@ -93,14 +93,14 @@ void NTFSDecorator::First()
 
 // ------------------------------------------------------------------------------
 
-void NTFSDecorator::Next()
+void DriveDecorator::Next()
 {
 	It->Next( );
 }
 
 // ------------------------------------------------------------------------------
 
-bool NTFSDecorator::IsDone() const
+bool DriveDecorator::IsDone() const
 {
 	if (It->GetCurrentIndex() > EndCluster || It->IsDone())
 	{
@@ -114,14 +114,14 @@ bool NTFSDecorator::IsDone() const
 
 // ------------------------------------------------------------------------------
 
-ClusterDisk NTFSDecorator::GetCurrent()
+ClusterDisk DriveDecorator::GetCurrent()
 {
 	return It->GetCurrent();
 }
 
 // ------------------------------------------------------------------------------
 
-int NTFSDecorator::GetCurrentIndex() const
+int DriveDecorator::GetCurrentIndex() const
 {
 	return It->GetCurrentIndex();
 }
