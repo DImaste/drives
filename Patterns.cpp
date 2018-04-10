@@ -46,14 +46,14 @@ void DriveIterator::Next()
 bool DriveIterator::IsDone() const
 {
 	int TotalClusters = FileSystem->GetTotalSectors() / FileSystem->GetSectorPerCluster();
-	return ( CurrentCluster >= TotalClusters );
+	return (CurrentCluster >= TotalClusters);
 }
 
 // ------------------------------------------------------------------------------
 ClusterDisk DriveIterator::GetCurrent()
 {
-	FileSystem->ReadCluster( CurrentCluster, 1, DataBuffer );
-	Cluster.assign( DataBuffer, DataBuffer + BytesPerCluster );
+	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
+	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
 	return Cluster;
 }
 

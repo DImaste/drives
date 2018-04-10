@@ -21,11 +21,11 @@ using namespace std;
 #endif
 
 
- typedef vector < BYTE > ClusterDisk;
+ typedef vector <BYTE> ClusterDisk;
 
  // Template Iterator
 
-  template < class Type >
+  template <class Type>
 class Iterator
 {
 protected:

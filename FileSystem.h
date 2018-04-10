@@ -4,7 +4,7 @@
 #define FileSystemH
 
 //---------------------------------------------------------------------------
-#endif
+
 
 #include <windows.h>
 #include "Main.h"
@@ -79,7 +79,7 @@ public:
 	void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle);
 
 };
-
+#endif
 
 
 

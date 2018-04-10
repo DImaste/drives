@@ -5,8 +5,8 @@
 #include <windows.h>
 #include "IteratorThread.h"
 #include "Patterns.h"
-//#include "FileSystem.h"
-//#include "PatternDecorator.h"
+#include "FileSystem.h"
+
 
 using namespace std;
 #pragma package(smart_init)
@@ -46,32 +46,46 @@ void __fastcall IteratorThread::Execute()
 {
 	// bool result=false;
 
-	// mydisk = new NTFS_FS(path);
-	 NTFS_FS mydisk = NTFS_FS();
+	 NTFS_FS *mydisk = new NTFS_FS();
+	// NTFS_FS mydisk = NTFS_FS();
+
+	/*
 	 FileSystemHandle = mydisk.GetFileHandle();
+	 */
+	  FileSystemHandle = mydisk->GetFileHandle();
+
 
 	 int BytesPerCluster;
 	 int TotalClusters;
 
 
-		if (mydisk.result)
+		if (mydisk->result)
 		{
 			MainForm->LogBox->Items->Add("Ok");
 
-			mydisk.SetFileHandle(FileSystemHandle);
+			mydisk->SetFileHandle(FileSystemHandle);
 
 			if (FileSystemHandle == 0)
 			{
 				Application->MessageBoxW(L"Handle Lost", L"", MB_OK);
 			}
 
-			if (mydisk.ReadBootBlock())
+			if (mydisk->ReadBootBlock())
 				{
+					/*
 					TotalClusters = mydisk.GetTotalSectors( ) / mydisk.GetSectorPerCluster( );
 					BytesPerCluster = mydisk.GetBytesPerSector() * mydisk.GetSectorPerCluster( );
 					int TotalSectors  = mydisk.GetTotalSectors();
 					int BytesPerSector = mydisk.GetBytesPerSector();
 				   //	int OEMID = mydisk
+
+				   */
+
+					TotalClusters = mydisk->GetTotalSectors( ) / mydisk->GetSectorPerCluster( );
+					BytesPerCluster = mydisk->GetBytesPerSector() * mydisk->GetSectorPerCluster( );
+					int TotalSectors  = mydisk->GetTotalSectors();
+					int BytesPerSector = mydisk->GetBytesPerSector();
+
 
 					MainForm->Television->Items->Add("Sector Size = "+ IntToStr(BytesPerSector)+" Bytes" );
 					MainForm->Television->Items->Add("Total Sectors = "+ IntToStr(TotalSectors));
@@ -89,6 +103,8 @@ void __fastcall IteratorThread::Execute()
 		{
 			MainForm->LogBox->Items->Add("nOk");
 		}
+
+	//Это неправильно, нужно вынести это в конструктор переборного потока
 
 	int BeginCluster;
 	int EndCluster;
@@ -109,15 +125,15 @@ void __fastcall IteratorThread::Execute()
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 
-	DriveIterator *It  =new DriveIterator( &mydisk );
+	DriveIterator *It  =new DriveIterator( mydisk );
 
-   //	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
+	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
 	DriveDecorator *ArrIterator = new DriveDecorator( It, BeginCluster, EndCluster );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 
-	if (memcmp(mydisk.GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
+	if (memcmp(mydisk->GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
 		{
 			for (ArrIterator->First(); !ArrIterator->IsDone(); ArrIterator->Next())
 				{
@@ -144,7 +160,6 @@ void __fastcall IteratorThread::Execute()
 						{
 						}
 
-
 					MySearchThread->SetCurrentCluster(ArrIterator->GetCurrentIndex());
 
 					MySearchThread->BufferCopiedEvent->ResetEvent();
@@ -153,7 +168,6 @@ void __fastcall IteratorThread::Execute()
 						{
 							break;
 						}
-
 				}
 
 			MainForm->LogBox->Items->Add("Read Clusters succesfully!");
@@ -169,6 +183,7 @@ void __fastcall IteratorThread::Execute()
 
 	CloseHandle(FileSystemHandle);
 	delete[] dataBuffer;
+	delete[] It;
 	delete[] ArrIterator;
 }
 //---------------------------------------------------------------------------
