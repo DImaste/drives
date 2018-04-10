@@ -4,7 +4,7 @@
 #include <vcl.h>
 #include <windows.h>
 #include "IteratorThread.h"
-#include "PatternIterator.h"
+#include "Patterns.h"
 //#include "FileSystem.h"
 //#include "PatternDecorator.h"
 
@@ -47,7 +47,7 @@ void __fastcall IteratorThread::Execute()
 	// bool result=false;
 
 	// mydisk = new NTFS_FS(path);
-	 NTFS_FS mydisk = new NTFS_FS();
+	 NTFS_FS mydisk = NTFS_FS();
 	 FileSystemHandle = mydisk.GetFileHandle();
 
 	 int BytesPerCluster;
@@ -108,11 +108,10 @@ void __fastcall IteratorThread::Execute()
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
-	//int index=0;
 
-   //	NTFSClusterIterator *ArrIterator  =new NTFSClusterIterator( &mydisk );
+   //	DriveIterator *ArrIterator  =new DriveIterator( &mydisk );
 
-	NTFSClusterIterator *ArrIterator = new NTFSDecorator( new NTFSClusterIterator( &mydisk ), BeginCluster, EndCluster );
+	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
 
@@ -172,10 +171,4 @@ void __fastcall IteratorThread::Execute()
 }
 //---------------------------------------------------------------------------
 
-//Вопросы
 
-//
-// Есть информация, что __fastcall нет смысла использовать, потому что компилятор сам все оптимизирует, есть ли в это смысл?
-//Use __fastcall when you must, and never use it when you don’t have to. 32 битный компилятор
-
-// передача параметров между методами. Решение: Класс контейнер, верно ли?
