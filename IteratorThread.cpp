@@ -129,10 +129,12 @@ void __fastcall IteratorThread::Execute()
 
 	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
-	DriveDecorator *ArrIterator = new DriveDecorator( It, BeginCluster, EndCluster );
+	DriveIterator *ArrIterator = new DriveDecorator( It, BeginCluster, EndCluster );
 
-	MySearchThread = new SearchThread(dataBuffer,clusterSize,false, TotalClusters);  //new thread
+	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 
+
+	//delete
 	if (memcmp(mydisk->GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
 		{
 			for (ArrIterator->First(); !ArrIterator->IsDone(); ArrIterator->Next())
@@ -181,10 +183,15 @@ void __fastcall IteratorThread::Execute()
 	// Завершить поиск
 	MySearchThread->Terminate();
 
+
+    //Через деструктор фс
 	CloseHandle(FileSystemHandle);
+
+
 	delete[] dataBuffer;
+	delete[] ArrIterator; //decorator
 	delete[] It;
-	delete[] ArrIterator;
+
 }
 //---------------------------------------------------------------------------
 

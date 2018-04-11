@@ -52,7 +52,7 @@ private:
 	BYTE * DataBuffer;
 
 public:
-	DriveIterator(NTFS_FS* fs);
+	DriveIterator(/*NTFS_FS* fs*/);
 	virtual ~DriveIterator();
 	virtual void First();
 	virtual void Next();
@@ -83,11 +83,12 @@ public:
 
 //Decorator Class
 
-class DriveDecorator : public Decorator <ClusterDisk>
+class DriveDecorator : public DriveIterator
 {
 protected:
 	int BeginCluster;
 	int EndCluster;
+	DriveIterator *It;
 
 public:
 	DriveDecorator(DriveIterator * it, int beginCluster, int endCluster);

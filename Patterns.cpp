@@ -22,7 +22,7 @@ using namespace std;
 
  //Iterator realization
 
- DriveIterator::DriveIterator(NTFS_FS* fs)
+ DriveIterator::DriveIterator(/*NTFS_FS* fs*/)
 {
 	FileSystem = fs;
 	CurrentCluster = 0;
@@ -64,6 +64,8 @@ DriveIterator::~DriveIterator()
 }
 
 // ------------------------------------------------------------------------------
+
+//rename
 int DriveIterator::GetCurrentIndex() const
 {
 	return CurrentCluster;
@@ -72,8 +74,9 @@ int DriveIterator::GetCurrentIndex() const
 
 // Decorator realization
 
-DriveDecorator::DriveDecorator(DriveIterator * it, int beginCluster, int endCluster) : Decorator <ClusterDisk> (it)
+DriveDecorator::DriveDecorator(DriveIterator * it, int beginCluster, int endCluster)
 {
+	It= it;
 	BeginCluster = beginCluster;
 	EndCluster = endCluster;
 }
