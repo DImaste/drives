@@ -12,6 +12,7 @@
 
 //---------------------------------------------------------------------------
 
+ typedef vector <BYTE> ClusterDisk;
 
 typedef enum
 {
@@ -26,10 +27,9 @@ class FileSystemClass
 		static FileSystemClass *CreateFileSystem(wstring diskPath,FSType fsType);
 		static FileSystemClass *DestroyFileSystem(HANDLE FileSystemHandle);
 
-		virtual Iterator<ClusterDisk> *GetClusterIterator()=0;
-		virtual bool result const;
-		virtual bool ReadBootBlock() const;
-		virtual bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer) const;
+		virtual Iterator <ClusterDisk> *GetClusterIterator()=0;
+		virtual bool ReadBootBlock() const=0;
+		virtual bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer) const=0;
 		virtual HANDLE GetFileHandle()=0;
 		virtual UINT16 GetBytesPerSector()=0;
 		virtual BYTE* GetOEMName()=0;
@@ -40,17 +40,6 @@ class FileSystemClass
 
 
 } ;
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif

@@ -39,7 +39,9 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 	LogBox->Items->Add("   ");
 	LogBox->Items->Add("------New Search------");
 	LogBox->Items->Add("   ");
-	myIteratorThread = new IteratorThread(PathEdit->Text.c_str(),UnicodeString(FsType->Text), false);
+
+	//myIteratorThread = new IteratorThread(PathEdit->Text.c_str(), /*FsType->Text,*/ false);
+	myIteratorThread = new IteratorThread(PathEdit->Text, FsType->Text, false);
 }
 
 //---------------------------------------------------------------------------

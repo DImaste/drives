@@ -11,26 +11,24 @@
 using namespace std;
 #pragma package(smart_init)
 
-// can't find a match?
-__fastcall IteratorThread::IteratorThread(WCHAR *filePath, wstring fsType, bool CreateSuspended)
+// ERROR can't find a match?
+__fastcall IteratorThread::IteratorThread(UnicodeString filePath, UnicodeString fsType, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
-
 	FreeOnTerminate = true;
-	path= filePath;
+	//path= filePath;
 	FsType=fsType;
 	//mydisk = new NTFS_FS(path);
-
 }
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
 
-	  NTFS_FS *mydisk = new NTFS_FS();
+	  //NTFS_FS *mydisk = new NTFS_FS();
 
-	  //convert Unicode to FSType?
+	  //MAYBE convert Unicode to FSType?
 
-	//  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path,FsType);
+	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path,FsType);
 
 	  FileSystemHandle = mydisk->GetFileHandle();
 
@@ -38,9 +36,9 @@ void __fastcall IteratorThread::Execute()
 	  int BytesPerCluster;
 	  int TotalClusters;
 
-
-		if (mydisk->result)
-		{
+		//MAYBE didnt work
+	 //	if (mydisk->result)
+	 //	{
 			MainForm->LogBox->Items->Add("Ok");
 
 			mydisk->SetFileHandle(FileSystemHandle);
@@ -51,29 +49,29 @@ void __fastcall IteratorThread::Execute()
 			}
 
 			if (mydisk->ReadBootBlock())
-				{
-					TotalClusters = mydisk->GetTotalSectors() / mydisk->GetSectorPerCluster( );
-					BytesPerCluster = mydisk->GetBytesPerSector() * mydisk->GetSectorPerCluster( );
-					int TotalSectors  = mydisk->GetTotalSectors();
-					int BytesPerSector = mydisk->GetBytesPerSector();
+			{
+				TotalClusters = mydisk->GetTotalSectors() / mydisk->GetSectorPerCluster( );
+				BytesPerCluster = mydisk->GetBytesPerSector() * mydisk->GetSectorPerCluster( );
+				int TotalSectors  = mydisk->GetTotalSectors();
+				int BytesPerSector = mydisk->GetBytesPerSector();
 
 
-					MainForm->Television->Items->Add("Sector Size = "+ IntToStr(BytesPerSector)+" Bytes" );
-					MainForm->Television->Items->Add("Total Sectors = "+ IntToStr(TotalSectors));
-					MainForm->Television->Items->Add("Cluster Size = "+ IntToStr(BytesPerCluster)+" Bytes");
-					MainForm->Television->Items->Add("Total Clusters = "+ IntToStr(TotalClusters));
+				MainForm->Television->Items->Add("Sector Size = "+ IntToStr(BytesPerSector)+" Bytes" );
+				MainForm->Television->Items->Add("Total Sectors = "+ IntToStr(TotalSectors));
+				MainForm->Television->Items->Add("Cluster Size = "+ IntToStr(BytesPerCluster)+" Bytes");
+				MainForm->Television->Items->Add("Total Clusters = "+ IntToStr(TotalClusters));
 
-					MainForm->LogBox->Items->Add("Read MBR successfully!");
-				}
+				MainForm->LogBox->Items->Add("Read MBR successfully!");
+			}
 			else
-				{
-					MainForm->LogBox->Items->Add("Read MBR Error!");
-				}
-		}
-	else
-		{
-			MainForm->LogBox->Items->Add("nOk");
-		}
+			{
+				MainForm->LogBox->Items->Add("Read MBR Error!");
+			}
+	//	}
+  //	else
+  //		{
+  //			MainForm->LogBox->Items->Add("nOk");
+  //		}
 
 	//Это неправильно, нужно вынести это в конструктор переборного потока
 
@@ -91,12 +89,15 @@ void __fastcall IteratorThread::Execute()
 	   EndCluster = StrToInt(MainForm->End->Text);
 	}
 
-
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 
-	DriveIterator *It  =new DriveIterator( mydisk );
+
+	DriveIterator <ClusterDisk> It = mydisk->GetClusterIterator();
+
+
+	//DriveIterator *It  =new DriveIterator( mydisk );
 
 	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
@@ -129,9 +130,7 @@ void __fastcall IteratorThread::Execute()
 
 	MySearchThread->Terminate();
 
-
-	//Через деструктор фс
-	mydisk->~NTFS_FS(FileSystemHandle);
+	mydisk->Destroy(FileSystemHandle);
 
 	delete[] dataBuffer;
 	delete[] Dec; //decorator

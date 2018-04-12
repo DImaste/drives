@@ -8,7 +8,7 @@
 #include "SearchThread.h"
 #include "string"
 #include "FileSystemClass.h"
-//#include "FileSystem.h"
+
 
 //---------------------------------------------------------------------------
 class IteratorThread : public TThread
@@ -20,13 +20,16 @@ private:
 
 protected:
 	void __fastcall Execute();
-	WCHAR* path;
-	vector < BYTE > CurrentCluster;
+	wstring path;
+	wstring FsType;
+	vector <BYTE> CurrentCluster;
 
 public:
-	__fastcall IteratorThread(WCHAR *filePath, wstring fsType,  bool CreateSuspended);
 
-	wstring FsType;
+
+	//__fastcall IteratorThread(WCHAR *filePath, /*wstring fsType, */ bool CreateSuspended);
+
+	__fastcall IteratorThread(UnicodeString filePath, UnicodeString fsType, bool CreateSuspended);
 
 
    //	NTFS_FS * mydisk;

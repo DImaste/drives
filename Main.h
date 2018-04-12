@@ -35,7 +35,7 @@ private:	// User declarations
 public:		// User declarations
 	__fastcall TMainForm(TComponent* Owner);
 
-	IteratorThread* myIteratorThread;
+	IteratorThread * myIteratorThread;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;

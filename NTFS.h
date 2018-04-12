@@ -11,11 +11,13 @@
 #include <string>
 #include <vector>
 #include <list>
-
 #include <stdio.h>
+#include "Patterns.h"
 
 
 #pragma pack(push,1)
+
+typedef vector <BYTE> ClusterDisk;
 
 
 typedef struct
@@ -68,9 +70,11 @@ private:
 
 public:
 	NTFS_FS(/*WCHAR *filePath*/);
-	~NTFS_FS(HANDLE FileSystemHandle);
+	void NTFS_FS::Destroy(HANDLE FileSystemHandle);
 
-	bool result;
+
+   //	bool result;
+   	ClusterDisk *GetClusterIterator();
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
 	HANDLE NTFS_FS::GetFileHandle();

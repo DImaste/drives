@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 #include <windows.h>
 #include "NTFS.h"
+#include "FileSystemClass.h"
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -17,8 +18,7 @@
 
 using namespace std;
 
-//---------------------------------------------------------------------------
-#endif
+
 
 
  typedef vector <BYTE> ClusterDisk;
@@ -42,7 +42,27 @@ public:
 
 //Iterator Class
 
-  class DriveIterator : public Iterator < ClusterDisk >
+  class DriveIterator : public Iterator <ClusterDisk>
+{
+private:
+	//FileSystemClass *FileSystem;
+	ClusterDisk Cluster;
+	int CurrentCluster;
+	int BytesPerCluster;
+	BYTE * DataBuffer;
+
+public:
+	DriveIterator(/*FileSystemClass *FileSystem;*/);
+	virtual ~DriveIterator();
+	virtual void First();
+	virtual void Next();
+	virtual bool IsDone() const ;
+	virtual ClusterDisk GetCurrent();
+	virtual int GetCurrentIndex() const ;
+
+} ;
+// MAYBE Its wrong Inheritance
+class NTFSIterator : public Iterator <ClusterDisk>
 {
 private:
 	NTFS_FS * FileSystem;
@@ -52,16 +72,18 @@ private:
 	BYTE * DataBuffer;
 
 public:
-	DriveIterator(/*NTFS_FS* fs*/);
-	virtual ~DriveIterator();
+	NTFSIterator(NTFS_FS *fs);
+	virtual ~NTFSIterator();
 	virtual void First();
 	virtual void Next();
 	virtual bool IsDone() const ;
 	virtual ClusterDisk GetCurrent();
 	virtual int GetCurrentIndex() const ;
-
 } ;
 
+
+//MAYBE Dont need it
+/*
 //Template Decorator
 
 template <class Type>
@@ -81,6 +103,10 @@ public:
 	virtual int GetCurrentIndex() const {return It->GetCurrentIndex();}
 } ;
 
+ */
+
+
+
 //Decorator Class
 
 class DriveDecorator : public DriveIterator
@@ -93,7 +119,6 @@ protected:
 public:
 	DriveDecorator(DriveIterator * it, int beginCluster, int endCluster);
 
-	//virtual ~DriveDecorator();
 	virtual void First();
 	virtual void Next();
 	virtual bool IsDone() const ;
@@ -101,4 +126,5 @@ public:
 	virtual int GetCurrentIndex() const ;
 } ;
 
-
+//---------------------------------------------------------------------------
+#endif

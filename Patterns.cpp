@@ -22,11 +22,11 @@ using namespace std;
 
  //Iterator realization
 
- DriveIterator::DriveIterator(/*NTFS_FS* fs*/)
+ DriveIterator::DriveIterator(/*FileSystemClass *FileSystem;*/)
 {
-	FileSystem = fs;
-	CurrentCluster = 0;
-	BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
+   //	FileSystem = fs;
+   //	CurrentCluster = 0;
+   //	BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
 	DataBuffer = new BYTE[ BytesPerCluster ];
 }
 
@@ -45,15 +45,17 @@ void DriveIterator::Next()
 // ------------------------------------------------------------------------------
 bool DriveIterator::IsDone() const
 {
-	int TotalClusters = FileSystem->GetTotalSectors() / FileSystem->GetSectorPerCluster();
-	return (CurrentCluster >= TotalClusters);
+   //	int TotalClusters = FileSystem->GetTotalSectors() / FileSystem->GetSectorPerCluster();
+	//return (CurrentCluster >= TotalClusters);
+	return true;
 }
 
 // ------------------------------------------------------------------------------
 ClusterDisk DriveIterator::GetCurrent()
 {
-	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
-	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
+   //	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
+   //	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
+    Cluster=0;
 	return Cluster;
 }
 

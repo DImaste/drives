@@ -9,6 +9,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include "Patterns.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -17,9 +18,7 @@ using namespace std;
 //---------------------------------------------------------------------------
 NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
 {
-	//FileHandle = 0;
 	//	WCHAR *filePath = MainForm->PathEdit->Text.c_str(); // there is the question
-	//	WCHAR *sign = MainForm->ByteEdit->Text.c_str(); // there is the question
 
 	fileHandle = CreateFileW(MainForm->PathEdit->Text.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
@@ -37,15 +36,10 @@ NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
 			result = false;
 	}
 
-   /*	path=filePath; */
-
 	BytesPerSector=0;
 	SectorPerCluster=0;
 	TotalSectors=0;
 
-
-
-	//CloseHandle(fileHandle);
 }
 
 //---------------------------------------------------------------------------
@@ -145,11 +139,17 @@ void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
 
 //---------------------------------------------------------------------------
 
- NTFS_FS::~NTFS_FS(HANDLE FileSystemHandle)
+ void NTFS_FS::Destroy(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
 
+//---------------------------------------------------------------------------
+
+NTFSIterator <ClusterDisk> NTFS_FS::GetClusterIterator()
+{
+	return new NTFSIterator(this);
+}
 
 //---------------------------------------------------------------------------
 
