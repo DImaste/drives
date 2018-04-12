@@ -5,7 +5,7 @@
 #include <memory>
 #include "Main.h"
 #include "IteratorThread.h"
-#include "FileSystem.h"
+#include "NTFS.h"
 #include "SearchThread.h"
 #include <string>
 #include <vector>
@@ -39,7 +39,7 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 	LogBox->Items->Add("   ");
 	LogBox->Items->Add("------New Search------");
 	LogBox->Items->Add("   ");
-	myIteratorThread = new IteratorThread(PathEdit->Text.c_str(),false);
+	myIteratorThread = new IteratorThread(PathEdit->Text.c_str(),UnicodeString(FsType->Text), false);
 }
 
 //---------------------------------------------------------------------------
@@ -62,19 +62,6 @@ void __fastcall TMainForm::SaveClick(TObject *Sender)
 
 		}
 
-
-	/*
-	for ( int ii=0; ii<Television->GetCount(); ii++ )
-	 {
-		int size = Television->GetTextLen();
-		//char str[MAX_PATH]={0};
-		//WCHAR* str ;//AX_PATH]={0};
-		std::auto_ptr <WCHAR> Buffer(new WCHAR[size]);
-		Television->GetTextBuf(Buffer.get(),size);   //(ii,str);
-		LogBox->Items->Add(size);
-		fprintf(fp,"%s\n",Buffer.get());
-	 }
-	*/
 	fclose(fp);
 
 }

@@ -107,8 +107,8 @@
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <ItemGroup>
-        <CppCompile Include="FileSystem.cpp">
-            <DependentOn>FileSystem.h</DependentOn>
+        <CppCompile Include="FileSystemClass.cpp">
+            <DependentOn>FileSystemClass.h</DependentOn>
             <BuildOrder>7</BuildOrder>
         </CppCompile>
         <CppCompile Include="IteratorThread.cpp">
@@ -128,6 +128,10 @@
             <BuildOrder>1</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
+        <CppCompile Include="NTFS.cpp">
+            <DependentOn>NTFS.h</DependentOn>
+            <BuildOrder>7</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Patterns.cpp">
             <DependentOn>Patterns.h</DependentOn>
             <BuildOrder>7</BuildOrder>

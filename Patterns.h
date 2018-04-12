@@ -4,7 +4,7 @@
 #define PatternsH
 //---------------------------------------------------------------------------
 #include <windows.h>
-#include "FileSystem.h"
+#include "NTFS.h"
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>

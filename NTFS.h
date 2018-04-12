@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 
-#ifndef FileSystemH
-#define FileSystemH
+#ifndef NTFSH
+#define NTFSH
 
 //---------------------------------------------------------------------------
 
@@ -67,8 +67,10 @@ private:
 	__int64 Size;
 
 public:
+	NTFS_FS(/*WCHAR *filePath*/);
+	~NTFS_FS(HANDLE FileSystemHandle);
+
 	bool result;
-	NTFS_FS(/*WCHAR *filePath*/)	;  	//конструктор класса
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
 	HANDLE NTFS_FS::GetFileHandle();

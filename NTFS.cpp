@@ -2,7 +2,7 @@
 
 #pragma hdrstop
 
-#include "FileSystem.h"
+#include "NTFS.h"
 #include "Main.h"
 #include <windows.h>
 #include <stdlib.h>
@@ -142,6 +142,14 @@ void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
 {
 	fileHandle = FileSystemHandle;
 }
+
+//---------------------------------------------------------------------------
+
+ NTFS_FS::~NTFS_FS(HANDLE FileSystemHandle)
+{
+	CloseHandle(FileSystemHandle);
+}
+
 
 //---------------------------------------------------------------------------
 

@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object PathEdit: TLabeledEdit
     Left = 8
     Top = 24
-    Width = 449
+    Width = 250
     Height = 21
     EditLabel.Width = 155
     EditLabel.Height = 13
@@ -124,5 +124,15 @@ object MainForm: TMainForm
     EditLabel.Caption = 'End Cluster'
     TabOrder = 9
     Text = 'end'
+  end
+  object FsType: TComboBox
+    Left = 264
+    Top = 24
+    Width = 193
+    Height = 21
+    TabOrder = 10
+    Text = 'NTFS'
+    Items.Strings = (
+      'NTFS')
   end
 end

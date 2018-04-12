@@ -25,6 +25,7 @@ __published:	// IDE-managed Components
 	TButton *StopButton;
 	TProgressBar *Progress;
 	TLabeledEdit *End;
+	TComboBox *FsType;
 	void __fastcall SearchButtonClick(TObject *Sender);
 	void __fastcall SaveClick(TObject *Sender);
 	void __fastcall StopButtonClick(TObject *Sender);

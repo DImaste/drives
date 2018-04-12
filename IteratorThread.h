@@ -6,6 +6,8 @@
 #include <System.Classes.hpp>
 //---------------------------------------------------------------------------
 #include "SearchThread.h"
+#include "string"
+#include "FileSystemClass.h"
 //#include "FileSystem.h"
 
 //---------------------------------------------------------------------------
@@ -22,7 +24,11 @@ protected:
 	vector < BYTE > CurrentCluster;
 
 public:
-	__fastcall IteratorThread(WCHAR *filePath,  bool CreateSuspended);
+	__fastcall IteratorThread(WCHAR *filePath, wstring fsType,  bool CreateSuspended);
+
+	wstring FsType;
+
+
    //	NTFS_FS * mydisk;
 
 	//WCHAR *filePath; //is there a sense?

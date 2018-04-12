@@ -5,58 +5,38 @@
 #include <windows.h>
 #include "IteratorThread.h"
 #include "Patterns.h"
-#include "FileSystem.h"
+#include "NTFS.h"
 
 
 using namespace std;
 #pragma package(smart_init)
 
-
-
-
-//---------------------------------------------------------------------------
-
-//   Important: Methods and properties of objects in VCL can only be
-//   used in a method called using Synchronize, for example:
-//
-//      Synchronize(&UpdateCaption);
-//
-//   where UpdateCaption could look like:
-//
-//      void __fastcall IteratorThread::UpdateCaption()
-//      {
-//        Form1->Caption = "Updated in a thread";
-//      }
-
-// this file contains searching iterator class
-
-//---------------------------------------------------------------------------
-
-__fastcall IteratorThread::IteratorThread(WCHAR *filePath, bool CreateSuspended)
+// can't find a match?
+__fastcall IteratorThread::IteratorThread(WCHAR *filePath, wstring fsType, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 
 	FreeOnTerminate = true;
 	path= filePath;
+	FsType=fsType;
 	//mydisk = new NTFS_FS(path);
 
 }
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
-	// bool result=false;
 
-	 NTFS_FS *mydisk = new NTFS_FS();
-	// NTFS_FS mydisk = NTFS_FS();
+	  NTFS_FS *mydisk = new NTFS_FS();
 
-	/*
-	 FileSystemHandle = mydisk.GetFileHandle();
-	 */
+	  //convert Unicode to FSType?
+
+	//  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path,FsType);
+
 	  FileSystemHandle = mydisk->GetFileHandle();
 
 
-	 int BytesPerCluster;
-	 int TotalClusters;
+	  int BytesPerCluster;
+	  int TotalClusters;
 
 
 		if (mydisk->result)
@@ -72,16 +52,7 @@ void __fastcall IteratorThread::Execute()
 
 			if (mydisk->ReadBootBlock())
 				{
-					/*
-					TotalClusters = mydisk.GetTotalSectors( ) / mydisk.GetSectorPerCluster( );
-					BytesPerCluster = mydisk.GetBytesPerSector() * mydisk.GetSectorPerCluster( );
-					int TotalSectors  = mydisk.GetTotalSectors();
-					int BytesPerSector = mydisk.GetBytesPerSector();
-				   //	int OEMID = mydisk
-
-				   */
-
-					TotalClusters = mydisk->GetTotalSectors( ) / mydisk->GetSectorPerCluster( );
+					TotalClusters = mydisk->GetTotalSectors() / mydisk->GetSectorPerCluster( );
 					BytesPerCluster = mydisk->GetBytesPerSector() * mydisk->GetSectorPerCluster( );
 					int TotalSectors  = mydisk->GetTotalSectors();
 					int BytesPerSector = mydisk->GetBytesPerSector();
@@ -129,68 +100,42 @@ void __fastcall IteratorThread::Execute()
 
 	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
-	DriveIterator *ArrIterator = new DriveDecorator( It, BeginCluster, EndCluster );
+	DriveIterator *Dec = new DriveDecorator( It, BeginCluster, EndCluster );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 
 
-	//delete
-	if (memcmp(mydisk->GetOEMName(), "\x4e\x54\x46\x53\x20\x20\x20\x20",  8) == 0 )
-		{
-			for (ArrIterator->First(); !ArrIterator->IsDone(); ArrIterator->Next())
+		for (Dec->First(); !Dec->IsDone(); Dec->Next())
+			{
+				CurrentCluster = Dec->GetCurrent();
+
+				MySearchThread->BufferReadyEvent->SetEvent();
+
+				while(MySearchThread->BufferCopiedEvent->WaitFor(WaitDelayMs) != wrSignaled)
 				{
-				   /*	if (!mydisk.ReadCluster( i, 1, dataBuffer ) )
-						{
-							Application->MessageBoxW(L"ReadClusterError", L"", MB_OK);
-							break;
-						}   */
-
-						 CurrentCluster = ArrIterator->GetCurrent();
-
-
-					// Заблокировать доступ к буферу
-					//BufferAccessCS->Enter();
-
-					// Разблокировать доступ к буферу
-					//BufferAccessCS->Leave();
-
-					// Выставить флаг готовности буфера
-					MySearchThread->BufferReadyEvent->SetEvent();
-
-					// Ожидать окончания копирования буфера
-					while(MySearchThread->BufferCopiedEvent->WaitFor(WaitDelayMs) != wrSignaled)
-						{
-						}
-
-					MySearchThread->SetCurrentCluster(ArrIterator->GetCurrentIndex());
-
-					MySearchThread->BufferCopiedEvent->ResetEvent();
-
-					if ( Terminated )
-						{
-							break;
-						}
 				}
 
-			MainForm->LogBox->Items->Add("Read Clusters succesfully!");
-		}
-	else
-		{
-			Application->MessageBoxW(L"NotNTFS", L"", MB_OK);
-			//break;
-        }
+				MySearchThread->SetCurrentCluster(Dec->GetCurrentIndex());
 
-	// Завершить поиск
+				MySearchThread->BufferCopiedEvent->ResetEvent();
+
+				if ( Terminated )
+				{
+					break;
+				}
+			}
+
+			MainForm->LogBox->Items->Add("Read Clusters succesfully!");
+
 	MySearchThread->Terminate();
 
 
-    //Через деструктор фс
-	CloseHandle(FileSystemHandle);
-
+	//Через деструктор фс
+	mydisk->~NTFS_FS(FileSystemHandle);
 
 	delete[] dataBuffer;
-	delete[] ArrIterator; //decorator
-	delete[] It;
+	delete[] Dec; //decorator
+	delete[] It;  //iterator
 
 }
 //---------------------------------------------------------------------------
