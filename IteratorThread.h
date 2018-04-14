@@ -20,8 +20,10 @@ private:
 
 protected:
 	void __fastcall Execute();
-	wstring path;
-	wstring FsType;
+	UnicodeString path;
+	UnicodeString StringTypeFs;
+	FSType StructTypeFs;
+
 	vector <BYTE> CurrentCluster;
 
 public:

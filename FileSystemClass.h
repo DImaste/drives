@@ -24,7 +24,7 @@ class FileSystemClass
 {
 	public :
 
-		static FileSystemClass *CreateFileSystem(wstring diskPath,FSType fsType);
+		static FileSystemClass *CreateFileSystem(UnicodeString diskPath,FSType fsType);
 		static FileSystemClass *DestroyFileSystem(HANDLE FileSystemHandle);
 
 		virtual Iterator <ClusterDisk> *GetClusterIterator()=0;

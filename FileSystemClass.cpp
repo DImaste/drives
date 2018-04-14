@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
-FileSystemClass *FileSystemClass::CreateFileSystem(wstring diskPath,FileSystemType fsType)
+FileSystemClass *FileSystemClass::CreateFileSystem(UnicodeString diskPath,FSType fsType)
 {
 	switch (fsType)
 	{

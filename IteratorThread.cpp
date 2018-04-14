@@ -6,6 +6,9 @@
 #include "IteratorThread.h"
 #include "Patterns.h"
 #include "NTFS.h"
+#include <iostream>
+#include <map>
+#include "FileSystemClass.h"
 
 
 using namespace std;
@@ -16,8 +19,8 @@ __fastcall IteratorThread::IteratorThread(UnicodeString filePath, UnicodeString 
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
-	//path= filePath;
-	FsType=fsType;
+	path= filePath;
+	StringTypeFs=fsType;
 	//mydisk = new NTFS_FS(path);
 }
 //---------------------------------------------------------------------------
@@ -26,9 +29,20 @@ void __fastcall IteratorThread::Execute()
 
 	  //NTFS_FS *mydisk = new NTFS_FS();
 
+
+
+
+	  map <UnicodeString, FSType> mapper;
+
+	  if (mapper.count(StringTypeFs))
+	  {
+		  StructTypeFs =  mapper[StringTypeFs] ;
+      }
+
+
 	  //MAYBE convert Unicode to FSType?
 
-	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path,FsType);
+	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path, StructTypeFs);
 
 	  FileSystemHandle = mydisk->GetFileHandle();
 
@@ -130,7 +144,7 @@ void __fastcall IteratorThread::Execute()
 
 	MySearchThread->Terminate();
 
-	mydisk->Destroy(FileSystemHandle);
+	mydisk->DestroyFileSystem(FileSystemHandle);
 
 	delete[] dataBuffer;
 	delete[] Dec; //decorator

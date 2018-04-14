@@ -18,10 +18,9 @@
 
 using namespace std;
 
+//---------------------------------------------------------------------------
 
-
-
- typedef vector <BYTE> ClusterDisk;
+typedef vector <BYTE> ClusterDisk;
 
  // Template Iterator
 
@@ -37,11 +36,13 @@ public:
 	virtual void Next() = 0;
 	virtual bool IsDone() const = 0;
 	virtual Type GetCurrent() = 0;
-	virtual int GetCurrentIndex() const = 0;
+	//virtual int GetCurrentIndex() const = 0;
 } ;
 
-//Iterator Class
+//---------------------------------------------------------------------------
 
+
+//Iterator Class
   class DriveIterator : public Iterator <ClusterDisk>
 {
 private:
@@ -61,6 +62,9 @@ public:
 	virtual int GetCurrentIndex() const ;
 
 } ;
+
+//---------------------------------------------------------------------------
+
 // MAYBE Its wrong Inheritance
 class NTFSIterator : public Iterator <ClusterDisk>
 {
