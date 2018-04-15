@@ -139,14 +139,14 @@ void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
 
 //---------------------------------------------------------------------------
 
- void NTFS_FS::Destroy(HANDLE FileSystemHandle)
+ void NTFS_FS::DestroyFileSystem(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
 
 //---------------------------------------------------------------------------
 
-NTFSIterator <ClusterDisk> NTFS_FS::GetClusterIterator()
+NTFSIterator <ClusterDisk> NTFS_FS::*GetClusterIterator()
 {
 	return new NTFSIterator(this);
 }

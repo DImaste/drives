@@ -20,9 +20,11 @@ private:
 
 protected:
 	void __fastcall Execute();
-	UnicodeString path;
+	UnicodeString Path;
 	UnicodeString StringTypeFs;
 	FSType StructTypeFs;
+	UnicodeString StartCluster;
+	UnicodeString EndCluster;
 
 	vector <BYTE> CurrentCluster;
 
@@ -31,7 +33,8 @@ public:
 
 	//__fastcall IteratorThread(WCHAR *filePath, /*wstring fsType, */ bool CreateSuspended);
 
-	__fastcall IteratorThread(UnicodeString filePath, UnicodeString fsType, bool CreateSuspended);
+	__fastcall IteratorThread(UnicodeString filePath, UnicodeString fsType,
+	UnicodeString startCluster,UnicodeString endCluster, bool CreateSuspended);
 
 
    //	NTFS_FS * mydisk;

@@ -15,12 +15,16 @@ using namespace std;
 #pragma package(smart_init)
 
 // ERROR can't find a match?
-__fastcall IteratorThread::IteratorThread(UnicodeString filePath, UnicodeString fsType, bool CreateSuspended)
+__fastcall IteratorThread::IteratorThread(UnicodeString filePath, UnicodeString fsType,
+UnicodeString startCluster, UnicodeString endCluster, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
-	path= filePath;
+	Path= filePath;
 	StringTypeFs=fsType;
+	StartCluster = startCluster;
+	EndCluster = endCluster;
+
 	//mydisk = new NTFS_FS(path);
 }
 //---------------------------------------------------------------------------
@@ -89,30 +93,45 @@ void __fastcall IteratorThread::Execute()
 
 	//Это неправильно, нужно вынести это в конструктор переборного потока
 
-	int BeginCluster;
-	int EndCluster;
+	__int64 BeginClusterInt=0;
+	__int64 LastClusterInt=0;
 
-	if  (MainForm->End->Text=="end")
+	if  (EndCluster=="end" && StartCluster=="Start")
 	{
-		BeginCluster = StrToInt(MainForm->Start->Text);
-		EndCluster = TotalClusters;
+		BeginClusterInt = mydisk->GetFirstCluster();
+		LastClusterInt = TotalClusters;
 	}
-	else
+
+	if  (EndCluster!="end" && StartCluster=="Start")
 	{
-	   BeginCluster = StrToInt(MainForm->Start->Text) ;
-	   EndCluster = StrToInt(MainForm->End->Text);
+		BeginClusterInt = mydisk->GetFirstCluster();
+		LastClusterInt = StrToInt(EndCluster);
 	}
+
+	if  (EndCluster=="end" && StartCluster!="Start")
+	{
+		BeginClusterInt = StrToInt(StartCluster);
+		LastClusterInt = TotalClusters;
+	}
+
+	if  (EndCluster!="end" && StartCluster!="Start")
+	{
+		BeginClusterInt = StrToInt(StartCluster);
+		LastClusterInt = StrToInt(EndCluster);
+	}
+
+
+
 
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
 
 
-	DriveIterator <ClusterDisk> It = mydisk->GetClusterIterator();
+	DriveIterator *It = mydisk->GetClusterIterator();
 
 
 	//DriveIterator *It  =new DriveIterator( mydisk );
-
 	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
 
 	DriveIterator *Dec = new DriveDecorator( It, BeginCluster, EndCluster );

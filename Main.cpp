@@ -41,7 +41,8 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 	LogBox->Items->Add("   ");
 
 	//myIteratorThread = new IteratorThread(PathEdit->Text.c_str(), /*FsType->Text,*/ false);
-	myIteratorThread = new IteratorThread(PathEdit->Text, FsType->Text, false);
+	//myIteratorThread = new IteratorThread(PathEdit->Text, FsType->Text, false);
+	IteratorThread *myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
 }
 
 //---------------------------------------------------------------------------
@@ -72,7 +73,7 @@ void __fastcall TMainForm::SaveClick(TObject *Sender)
 void __fastcall TMainForm::StopButtonClick(TObject *Sender)
 {
 	Application->MessageBoxW(L"Search Terminated!", L"", MB_OK);
-	myIteratorThread->Terminate();
+	//myIteratorThread1->Terminate();
 }
 //---------------------------------------------------------------------------
 

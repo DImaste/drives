@@ -33,9 +33,12 @@ __published:	// IDE-managed Components
           TVSTTextType TextType, UnicodeString &CellText);
 private:	// User declarations
 public:		// User declarations
+
+	//IteratorThread *myIteratorThread1;
 	__fastcall TMainForm(TComponent* Owner);
 
-	IteratorThread *myIteratorThread;
+	//IteratorThread *myIteratorThread;
+
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;

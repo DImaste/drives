@@ -79,7 +79,7 @@ object MainForm: TMainForm
     EditLabel.Height = 13
     EditLabel.Caption = 'Start Cluster'
     TabOrder = 4
-    Text = '0'
+    Text = 'start'
   end
   object LogBox: TListBox
     Left = 488

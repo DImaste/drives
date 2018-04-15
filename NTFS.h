@@ -19,7 +19,6 @@
 
 typedef vector <BYTE> ClusterDisk;
 
-
 typedef struct
 {
 	BYTE Jump[3];
@@ -47,9 +46,6 @@ typedef struct
 
 }BOOT_BLOCK;
 
-
-
-
 #pragma pack(pop)
 
  class NTFS_FS
@@ -70,19 +66,21 @@ private:
 
 public:
 	NTFS_FS(/*WCHAR *filePath*/);
-	void NTFS_FS::Destroy(HANDLE FileSystemHandle);
+	void NTFS_FS::DestroyFileSystem(HANDLE FileSystemHandle);
 
 
    //	bool result;
-   	ClusterDisk *GetClusterIterator();
+	ClusterDisk *GetClusterIterator();
+
+	int GetFirstCluster() {return 0;};
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
-	HANDLE NTFS_FS::GetFileHandle();
-	UINT16 NTFS_FS::GetBytesPerSector();
-	BYTE* NTFS_FS::GetOEMName();
-	BYTE NTFS_FS::GetSectorPerCluster();
-	ULONGLONG NTFS_FS::GetTotalSectors();
-	void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle);
+	HANDLE GetFileHandle();
+	UINT16 GetBytesPerSector();
+	BYTE* GetOEMName();
+	BYTE GetSectorPerCluster();
+	ULONGLONG GetTotalSectors();
+	void SetFileHandle(HANDLE FileSystemHandle);
 
 };
 #endif

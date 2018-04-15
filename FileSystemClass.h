@@ -27,7 +27,10 @@ class FileSystemClass
 		static FileSystemClass *CreateFileSystem(UnicodeString diskPath,FSType fsType);
 		static FileSystemClass *DestroyFileSystem(HANDLE FileSystemHandle);
 
-		virtual Iterator <ClusterDisk> *GetClusterIterator()=0;
+		virtual DriveIterator <ClusterDisk> *GetClusterIterator()=0;
+
+
+		virtual int GetFirstCluster() = 0;
 		virtual bool ReadBootBlock() const=0;
 		virtual bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer) const=0;
 		virtual HANDLE GetFileHandle()=0;

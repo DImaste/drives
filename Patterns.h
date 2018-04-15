@@ -54,19 +54,19 @@ private:
 
 public:
 	DriveIterator(/*FileSystemClass *FileSystem;*/);
-	virtual ~DriveIterator();
-	virtual void First();
-	virtual void Next();
-	virtual bool IsDone() const ;
-	virtual ClusterDisk GetCurrent();
-	virtual int GetCurrentIndex() const ;
+	~DriveIterator();
+	void First();
+	void Next();
+	bool IsDone() const ;
+	ClusterDisk GetCurrent();
+	int GetCurrentIndex() const ;
 
 } ;
 
 //---------------------------------------------------------------------------
 
 // MAYBE Its wrong Inheritance
-class NTFSIterator : public Iterator <ClusterDisk>
+class NTFSIterator : public DriveIterator
 {
 private:
 	NTFS_FS * FileSystem;
@@ -77,40 +77,16 @@ private:
 
 public:
 	NTFSIterator(NTFS_FS *fs);
-	virtual ~NTFSIterator();
-	virtual void First();
-	virtual void Next();
-	virtual bool IsDone() const ;
-	virtual ClusterDisk GetCurrent();
-	virtual int GetCurrentIndex() const ;
+	~NTFSIterator();
+	void First();
+	void Next();
+	bool IsDone() const ;
+	ClusterDisk GetCurrent();
+	int GetCurrentIndex() const ;
 } ;
 
 
-//MAYBE Dont need it
-/*
-//Template Decorator
-
-template <class Type>
-class Decorator : public Iterator <Type>
-{
-protected:
-	Iterator <Type> *It;
-	Decorator() {};
-
-public:
-	Decorator(Iterator <Type> * it) {It = it;}
-	virtual ~Decorator() { delete It;}
-	virtual void First()  { It->First(); }
-	virtual void Next()  {	It->Next();}
-	virtual bool IsDone() const  {return It->IsDone();}
-	virtual Type GetCurrent()  {return It->GetCurrent();}
-	virtual int GetCurrentIndex() const {return It->GetCurrentIndex();}
-} ;
-
- */
-
-
-
+//---------------------------------------------------------------------------
 //Decorator Class
 
 class DriveDecorator : public DriveIterator
@@ -121,13 +97,14 @@ protected:
 	DriveIterator *It;
 
 public:
+
 	DriveDecorator(DriveIterator * it, int beginCluster, int endCluster);
 
-	virtual void First();
-	virtual void Next();
-	virtual bool IsDone() const ;
-	virtual ClusterDisk GetCurrent();
-	virtual int GetCurrentIndex() const ;
+	void First();
+	void Next();
+	bool IsDone() const ;
+	ClusterDisk GetCurrent();
+	int GetCurrentIndex() const ;
 } ;
 
 //---------------------------------------------------------------------------

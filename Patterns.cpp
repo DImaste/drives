@@ -20,6 +20,10 @@ using namespace std;
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
  //Iterator realization
 
  DriveIterator::DriveIterator(/*FileSystemClass *FileSystem;*/)
@@ -55,7 +59,7 @@ ClusterDisk DriveIterator::GetCurrent()
 {
    //	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
    //	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
-    Cluster=0;
+	Cluster=0;
 	return Cluster;
 }
 
@@ -67,11 +71,67 @@ DriveIterator::~DriveIterator()
 
 // ------------------------------------------------------------------------------
 
-//rename
 int DriveIterator::GetCurrentIndex() const
 {
 	return CurrentCluster;
 }
+
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+
+//NTFS Iterator
+
+ NTFSIterator::NTFSIterator(NTFS_FS *fs)
+{
+   FileSystem = fs;
+   CurrentCluster = 0;
+   BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
+   DataBuffer = new BYTE[ BytesPerCluster ];
+}
+
+// ------------------------------------------------------------------------------
+void NTFSIterator::First()
+{
+	CurrentCluster = 0;
+}
+
+// ------------------------------------------------------------------------------
+void NTFSIterator::Next()
+{
+	CurrentCluster++ ;
+}
+
+// ------------------------------------------------------------------------------
+bool NTFSIterator::IsDone() const
+{
+	int TotalClusters = FileSystem->GetTotalSectors() / FileSystem->GetSectorPerCluster();
+	return (CurrentCluster >= TotalClusters);
+	return true;
+}
+
+// ------------------------------------------------------------------------------
+ClusterDisk NTFSIterator::GetCurrent()
+{
+	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
+	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
+	Cluster=0;
+	return Cluster;
+}
+
+// ------------------------------------------------------------------------------
+NTFSIterator::~DriveIterator()
+{
+	delete[ ] DataBuffer;
+}
+
+// ------------------------------------------------------------------------------
+
+int NTFSIterator::GetCurrentIndex() const
+{
+	return CurrentCluster;
+}
+
 
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
