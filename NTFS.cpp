@@ -16,33 +16,6 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
-{
-	//	WCHAR *filePath = MainForm->PathEdit->Text.c_str(); // there is the question
-
-	fileHandle = CreateFileW(MainForm->PathEdit->Text.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
-								);
-
-	if (fileHandle != INVALID_HANDLE_VALUE)
-	{
-			MainForm->LogBox->Items->Add("Opened Successfully");
-
-			result = true;
-	}
-	else
-	{
-			MainForm->LogBox->Items->Add("Can't open drive");
-			result = false;
-	}
-
-	BytesPerSector=0;
-	SectorPerCluster=0;
-	TotalSectors=0;
-
-}
-
-//---------------------------------------------------------------------------
 
 bool NTFS_FS::ReadBootBlock()
 {
@@ -97,62 +70,6 @@ bool NTFS_FS::ReadBootBlock()
 }
 //---------------------------------------------------------------------------
 
-ULONGLONG NTFS_FS::GetTotalSectors()
-{
-	return TotalSectors;
-}
-
-//---------------------------------------------------------------------------
-
-BYTE NTFS_FS::GetSectorPerCluster()
-{
-	return SectorPerCluster;
-}
-
-//---------------------------------------------------------------------------
-
-BYTE* NTFS_FS::GetOEMName()
-{
-	return OEMID;
-}
-
-//---------------------------------------------------------------------------
-
-UINT16 NTFS_FS::GetBytesPerSector()
-{
-	return BytesPerSector;
-}
-
-//---------------------------------------------------------------------------
-
-HANDLE NTFS_FS::GetFileHandle()
-{
-	return fileHandle;
-}
-
-//---------------------------------------------------------------------------
-
-void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
-{
-	fileHandle = FileSystemHandle;
-}
-
-//---------------------------------------------------------------------------
-
- void NTFS_FS::DestroyFileSystem(HANDLE FileSystemHandle)
-{
-	CloseHandle(FileSystemHandle);
-}
-
-//---------------------------------------------------------------------------
-
-NTFSIterator <ClusterDisk> NTFS_FS::*GetClusterIterator()
-{
-	return new NTFSIterator(this);
-}
-
-//---------------------------------------------------------------------------
-
 bool NTFS_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
 {
 	ULONGLONG StartOffset = StartCluster*ClusterSize;
@@ -184,6 +101,27 @@ bool NTFS_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *
 
 	return true;
 
+}
+
+//---------------------------------------------------------------------------
+
+HANDLE NTFS_FS::GetFileHandle()
+{
+	return fileHandle;
+}
+
+//---------------------------------------------------------------------------
+
+void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
+{
+	fileHandle = FileSystemHandle;
+}
+
+//---------------------------------------------------------------------------
+
+IndexIterator <ClusterDisk> NTFS_FS::*GetClusterIterator()
+{
+	return new NTFSIterator(this);
 }
 
 

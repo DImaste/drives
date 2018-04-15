@@ -25,8 +25,8 @@ using namespace std;
 //---------------------------------------------------------------------------
 
  //Iterator realization
-
- DriveIterator::DriveIterator(/*FileSystemClass *FileSystem;*/)
+/*
+ DriveIterator::DriveIterator()
 {
    //	FileSystem = fs;
    //	CurrentCluster = 0;
@@ -59,7 +59,7 @@ ClusterDisk DriveIterator::GetCurrent()
 {
    //	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
    //	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
-	Cluster=0;
+	//Cluster=0;
 	return Cluster;
 }
 
@@ -75,6 +75,7 @@ int DriveIterator::GetCurrentIndex() const
 {
 	return CurrentCluster;
 }
+*/
 
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
@@ -107,7 +108,6 @@ bool NTFSIterator::IsDone() const
 {
 	int TotalClusters = FileSystem->GetTotalSectors() / FileSystem->GetSectorPerCluster();
 	return (CurrentCluster >= TotalClusters);
-	return true;
 }
 
 // ------------------------------------------------------------------------------
@@ -115,12 +115,11 @@ ClusterDisk NTFSIterator::GetCurrent()
 {
 	FileSystem->ReadCluster(CurrentCluster, 1, DataBuffer);
 	Cluster.assign(DataBuffer, DataBuffer + BytesPerCluster);
-	Cluster=0;
 	return Cluster;
 }
 
 // ------------------------------------------------------------------------------
-NTFSIterator::~DriveIterator()
+NTFSIterator::~NTFSIterator()
 {
 	delete[ ] DataBuffer;
 }

@@ -11,6 +11,8 @@
 
 
 //---------------------------------------------------------------------------
+
+
 class IteratorThread : public TThread
 {
 private:
@@ -30,17 +32,11 @@ protected:
 
 public:
 
-
 	//__fastcall IteratorThread(WCHAR *filePath, /*wstring fsType, */ bool CreateSuspended);
 
 	__fastcall IteratorThread(UnicodeString filePath, UnicodeString fsType,
 	UnicodeString startCluster,UnicodeString endCluster, bool CreateSuspended);
 
-
-   //	NTFS_FS * mydisk;
-
-	//WCHAR *filePath; //is there a sense?
-	//WCHAR *sign ; //is there a sense?
 };
 //---------------------------------------------------------------------------
 #endif

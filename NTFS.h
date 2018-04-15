@@ -13,6 +13,7 @@
 #include <list>
 #include <stdio.h>
 #include "Patterns.h"
+#include "FileSystemClass.h"
 
 
 #pragma pack(push,1)
@@ -48,15 +49,16 @@ typedef struct
 
 #pragma pack(pop)
 
- class NTFS_FS
+class NTFS_FS : public FileSystemClass
 {
 protected:
+/*
 	HANDLE fileHandle;
 	UINT16 BytesPerSector;
 	BYTE SectorPerCluster;
 	ULONGLONG TotalSectors;
 	BYTE OEMID[9];
-	WCHAR* path;
+	WCHAR* path;   */
 
 private:
 
@@ -65,23 +67,23 @@ private:
 	__int64 Size;
 
 public:
-	NTFS_FS(/*WCHAR *filePath*/);
-	void NTFS_FS::DestroyFileSystem(HANDLE FileSystemHandle);
+	NTFS_FS() : FileSystemClass( ) {};
+  //	bool result;
+
+	DriveIterator <ClusterDisk> *GetClusterIterator();
 
 
-   //	bool result;
-	ClusterDisk *GetClusterIterator();
-
-	int GetFirstCluster() {return 0;};
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
+
+	/*int GetFirstCluster() {return 0;};
 	HANDLE GetFileHandle();
 	UINT16 GetBytesPerSector();
 	BYTE* GetOEMName();
 	BYTE GetSectorPerCluster();
 	ULONGLONG GetTotalSectors();
 	void SetFileHandle(HANDLE FileSystemHandle);
-
+	*/
 };
 #endif
 

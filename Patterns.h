@@ -43,30 +43,31 @@ public:
 
 
 //Iterator Class
-  class DriveIterator : public Iterator <ClusterDisk>
+template <class Type>
+  class DriveIterator : public Iterator <Type>
 {
 private:
 	//FileSystemClass *FileSystem;
-	ClusterDisk Cluster;
-	int CurrentCluster;
-	int BytesPerCluster;
-	BYTE * DataBuffer;
+   //	ClusterDisk Cluster;
+   //	int CurrentCluster;
+   //	int BytesPerCluster;
+   //	BYTE * DataBuffer;
 
 public:
-	DriveIterator(/*FileSystemClass *FileSystem;*/);
-	~DriveIterator();
-	void First();
-	void Next();
-	bool IsDone() const ;
-	ClusterDisk GetCurrent();
-	int GetCurrentIndex() const ;
+	DriveIterator() {};
+	~DriveIterator() {} ;
+	virtual void First()=0;
+	virtual void Next()=0;
+	virtual bool IsDone() const =0 ;
+	virtual Type GetCurrent()=0;
+	virtual int GetCurrentIndex() const =0;
 
 } ;
 
 //---------------------------------------------------------------------------
 
 // MAYBE Its wrong Inheritance
-class NTFSIterator : public DriveIterator
+class NTFSIterator : public DriveIterator <ClusterDisk>
 {
 private:
 	NTFS_FS * FileSystem;
@@ -89,16 +90,16 @@ public:
 //---------------------------------------------------------------------------
 //Decorator Class
 
-class DriveDecorator : public DriveIterator
+class DriveDecorator : public DriveIterator <ClusterDisk>
 {
 protected:
 	int BeginCluster;
 	int EndCluster;
-	DriveIterator *It;
+	DriveIterator <ClusterDisk> *It;
 
 public:
 
-	DriveDecorator(DriveIterator * it, int beginCluster, int endCluster);
+	DriveDecorator(DriveIterator <ClusterDisk> * it, int beginCluster, int endCluster);
 
 	void First();
 	void Next();

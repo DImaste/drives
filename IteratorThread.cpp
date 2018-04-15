@@ -24,18 +24,10 @@ UnicodeString startCluster, UnicodeString endCluster, bool CreateSuspended)
 	StringTypeFs=fsType;
 	StartCluster = startCluster;
 	EndCluster = endCluster;
-
-	//mydisk = new NTFS_FS(path);
 }
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
-
-	  //NTFS_FS *mydisk = new NTFS_FS();
-
-
-
-
 	  map <UnicodeString, FSType> mapper;
 
 	  if (mapper.count(StringTypeFs))
@@ -43,10 +35,7 @@ void __fastcall IteratorThread::Execute()
 		  StructTypeFs =  mapper[StringTypeFs] ;
       }
 
-
-	  //MAYBE convert Unicode to FSType?
-
-	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(path, StructTypeFs);
+	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(StructTypeFs);
 
 	  FileSystemHandle = mydisk->GetFileHandle();
 
@@ -54,9 +43,6 @@ void __fastcall IteratorThread::Execute()
 	  int BytesPerCluster;
 	  int TotalClusters;
 
-		//MAYBE didnt work
-	 //	if (mydisk->result)
-	 //	{
 			MainForm->LogBox->Items->Add("Ok");
 
 			mydisk->SetFileHandle(FileSystemHandle);
@@ -85,13 +71,6 @@ void __fastcall IteratorThread::Execute()
 			{
 				MainForm->LogBox->Items->Add("Read MBR Error!");
 			}
-	//	}
-  //	else
-  //		{
-  //			MainForm->LogBox->Items->Add("nOk");
-  //		}
-
-	//Это неправильно, нужно вынести это в конструктор переборного потока
 
 	__int64 BeginClusterInt=0;
 	__int64 LastClusterInt=0;
@@ -120,21 +99,12 @@ void __fastcall IteratorThread::Execute()
 		LastClusterInt = StrToInt(EndCluster);
 	}
 
-
-
-
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
+	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
 
-
-	DriveIterator *It = mydisk->GetClusterIterator();
-
-
-	//DriveIterator *It  =new DriveIterator( mydisk );
-	//	DriveIterator *ArrIterator = new DriveDecorator( new DriveIterator( &mydisk ), BeginCluster, EndCluster );
-
-	DriveIterator *Dec = new DriveDecorator( It, BeginCluster, EndCluster );
+	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 
@@ -142,7 +112,6 @@ void __fastcall IteratorThread::Execute()
 		for (Dec->First(); !Dec->IsDone(); Dec->Next())
 			{
 				CurrentCluster = Dec->GetCurrent();
-
 				MySearchThread->BufferReadyEvent->SetEvent();
 
 				while(MySearchThread->BufferCopiedEvent->WaitFor(WaitDelayMs) != wrSignaled)
@@ -166,6 +135,7 @@ void __fastcall IteratorThread::Execute()
 	mydisk->DestroyFileSystem(FileSystemHandle);
 
 	delete[] dataBuffer;
+	delete mydisk;
 	delete[] Dec; //decorator
 	delete[] It;  //iterator
 
