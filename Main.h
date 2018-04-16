@@ -37,7 +37,7 @@ public:		// User declarations
 	//IteratorThread *myIteratorThread1;
 	__fastcall TMainForm(TComponent* Owner);
 
-	//IteratorThread *myIteratorThread;
+	IteratorThread *myIteratorThread1;
 
 };
 //---------------------------------------------------------------------------

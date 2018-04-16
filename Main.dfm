@@ -133,6 +133,8 @@ object MainForm: TMainForm
     TabOrder = 10
     Text = 'NTFS'
     Items.Strings = (
-      'NTFS')
+      'NTFS'
+      'FAT'
+      'exFAT')
   end
 end

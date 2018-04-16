@@ -41,7 +41,8 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 
 	//myIteratorThread = new IteratorThread(PathEdit->Text.c_str(), /*FsType->Text,*/ false);
 	//myIteratorThread = new IteratorThread(PathEdit->Text, FsType->Text, false);
-	IteratorThread *myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
+	//IteratorThread *myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
+	myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
 }
 
 //---------------------------------------------------------------------------
@@ -72,7 +73,7 @@ void __fastcall TMainForm::SaveClick(TObject *Sender)
 void __fastcall TMainForm::StopButtonClick(TObject *Sender)
 {
 	Application->MessageBoxW(L"Search Terminated!", L"", MB_OK);
-	//myIteratorThread1->Terminate();
+	myIteratorThread1->Terminate();
 }
 //---------------------------------------------------------------------------
 
@@ -82,7 +83,7 @@ void __fastcall TMainForm::ResultTreeGetText(TBaseVirtualTree *Sender, PVirtualN
 {
       		if (!Node)
 	{
-		MessageBoxW(NULL,L"ќшибка выбора Node",L"ќшибка",MB_OK);
+		MessageBoxW(NULL,L"Ошибка выбора Node",L"Ошибка",MB_OK);
 		return;
 	}
 	FileTree * nodeData = (FileTree *)Sender->GetNodeData(Node);

@@ -4,11 +4,7 @@
 #define PatternsH
 //---------------------------------------------------------------------------
 #include <windows.h>
-#include "NTFS.h"
-#include "FAT.h"
-#include "exFAT.h"
 
-#include "FileSystemClass.h"
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -18,6 +14,10 @@
 #include <list>
 #include <stdio.h>
 #include <iostream>
+
+#include "NTFS.h"
+#include "FAT.h"
+#include "exFAT.h"
 
 using namespace std;
 

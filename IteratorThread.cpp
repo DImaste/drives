@@ -5,11 +5,9 @@
 #include <windows.h>
 #include "IteratorThread.h"
 #include "Patterns.h"
-#include "NTFS.h"
 #include <iostream>
 #include <map>
 #include "FileSystemClass.h"
-
 
 using namespace std;
 #pragma package(smart_init)
@@ -67,35 +65,35 @@ void __fastcall IteratorThread::Execute()
 				MainForm->Television->Items->Add("Cluster Size = "+ IntToStr(BytesPerCluster)+" Bytes");
 				MainForm->Television->Items->Add("Total Clusters = "+ IntToStr(TotalClusters));
 
-				MainForm->LogBox->Items->Add("Read MBR successfully!");
+				MainForm->LogBox->Items->Add("Read Boot Record successfully!");
 			}
 			else
 			{
-				MainForm->LogBox->Items->Add("Read MBR Error!");
+				MainForm->LogBox->Items->Add("Read Boot Record Error!");
 			}
 
 	__int64 BeginClusterInt=0;
 	__int64 LastClusterInt=0;
 
-	if  (EndCluster=="end" && StartCluster=="Start")
+	if  (EndCluster=="end" && StartCluster=="start")
 	{
 		BeginClusterInt = mydisk->GetFirstCluster();
 		LastClusterInt = TotalClusters;
 	}
 
-	if  (EndCluster!="end" && StartCluster=="Start")
+	if  (EndCluster!="end" && StartCluster=="start")
 	{
 		BeginClusterInt = mydisk->GetFirstCluster();
 		LastClusterInt = StrToInt(EndCluster);
 	}
 
-	if  (EndCluster=="end" && StartCluster!="Start")
+	if  (EndCluster=="end" && StartCluster!="start")
 	{
 		BeginClusterInt = StrToInt(StartCluster);
 		LastClusterInt = TotalClusters;
 	}
 
-	if  (EndCluster!="end" && StartCluster!="Start")
+	if  (EndCluster!="end" && StartCluster!="start")
 	{
 		BeginClusterInt = StrToInt(StartCluster);
 		LastClusterInt = StrToInt(EndCluster);
@@ -107,9 +105,6 @@ void __fastcall IteratorThread::Execute()
 	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
 
 	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
-
-
-
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 
