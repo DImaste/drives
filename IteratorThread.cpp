@@ -35,7 +35,7 @@ void __fastcall IteratorThread::Execute()
 		  StructTypeFs =  mapper[StringTypeFs] ;
       }
 
-	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(StructTypeFs);
+	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(Path ,StructTypeFs);
 
 	  FileSystemHandle = mydisk->GetFileHandle();
 
@@ -105,6 +105,9 @@ void __fastcall IteratorThread::Execute()
 	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
 
 	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
+
+
+
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 

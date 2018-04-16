@@ -107,6 +107,14 @@
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="exFAT.cpp">
+            <DependentOn>exFAT.h</DependentOn>
+            <BuildOrder>9</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="FAT.cpp">
+            <DependentOn>FAT.h</DependentOn>
+            <BuildOrder>8</BuildOrder>
+        </CppCompile>
         <CppCompile Include="FileSystemClass.cpp">
             <DependentOn>FileSystemClass.h</DependentOn>
             <BuildOrder>7</BuildOrder>

@@ -1,10 +1,9 @@
 //---------------------------------------------------------------------------
 
-#ifndef NTFSH
-#define NTFSH
+#ifndef exFATH
+#define exFATH
 
 //---------------------------------------------------------------------------
-
 
 #include <windows.h>
 #include "Main.h"
@@ -22,34 +21,27 @@ typedef vector <BYTE> ClusterDisk;
 
 typedef struct
 {
-	BYTE Jump[3];
-	BYTE OEMID[8];
-	UINT16 BytesPerSector;
-	BYTE SectorsPerCluster;
-	BYTE padding1[2];
-	BYTE padding2[5];
-	BYTE typeStore;
-	BYTE padding3[2];
-	BYTE padding4[8];
-	BYTE padding5[4];
-	BYTE padding6[4];
-	ULONGLONG TotalSectors;
-	ULONGLONG MftStartLcn;
-	ULONGLONG Mft2StartLcn;
-	BYTE sizeMFT;
-	BYTE padding7[3];
-	BYTE sizeIndex;
-	BYTE padding8[3];
-	ULONGLONG VolumeSerialNumber;
-	BYTE padding9[ 4 ];
-	BYTE padding10[ 426 ];
-	BYTE Checksum[ 2 ];
+	BYTE machInstruction[ 3 ];
+	BYTE OEMID[ 8 ];
+	BYTE padding[ 61 ];
+	ULONGLONG countOfSectors;
+	UINT32 sectorOfFAT;
+	UINT32 sizeOfFAT;
+	UINT32 sectorOfBitmap;
+	UINT32 countOfCluster;
+	UINT32 clusterOfRoot;
+	UINT32 numberOfVolume;
+	BYTE padding2[ 4 ];
+	BYTE sizeOfSector;
+	BYTE clusterMlt;
+	BYTE padding3[ 400 ];
+	BYTE signature[ 2 ];
 
-}BOOT_BLOCK_NTFS;
+}BOOT_BLOCK_exFAT;
 
 #pragma pack(pop)
 
- class NTFS_FS : public FileSystemClass
+ class exFAT_FS : public FileSystemClass
 {
 
 protected:
@@ -59,15 +51,19 @@ protected:
 	ULONGLONG TotalSectors;
 	BYTE OEMID[9];
 	WCHAR* path;
+    UINT16 ClusterSize;
+	ULONGLONG TotalClusters;
+
+	UINT32 SectorOfBitmap;
 
 private:
 
-	BOOT_BLOCK_NTFS* infoNTFS;
-	int ClusterSize;
+	BOOT_BLOCK_exFAT* infoexFAT;
+	//int ClusterSize;
 	__int64 Size;
 
 public:
-	NTFS_FS(/*WCHAR *filePath*/);
+	exFAT_FS(/*WCHAR *filePath*/);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
 	ClusterDisk *GetClusterIterator();
@@ -83,14 +79,5 @@ public:
 	void SetFileHandle(HANDLE FileSystemHandle);
 
 };
+
 #endif
-
-
-
-
-
-
-
-
-
-

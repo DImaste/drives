@@ -2,7 +2,10 @@
 
 #pragma hdrstop
 
-#include "NTFS.h"
+#include "exFAT.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
 #include "Main.h"
 #include <windows.h>
 #include <stdlib.h>
@@ -12,12 +15,11 @@
 #include "Patterns.h"
 #include "FileSystemClass.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
 
 using namespace std;
 
 //---------------------------------------------------------------------------
-NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
+exFAT_FS::exFAT_FS(/*WCHAR *filePath*/)
 {
 	fileHandle = CreateFileW(MainForm->PathEdit->Text.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
@@ -42,13 +44,14 @@ NTFS_FS::NTFS_FS(/*WCHAR *filePath*/)
 
 //---------------------------------------------------------------------------
 
-bool NTFS_FS::ReadBootBlock()
+bool exFAT_FS::ReadBootBlock()
 {
 	BYTE bootSector[512];
 
 	ULONGLONG startOffset = 0;
 	LARGE_INTEGER sectorOffset;		// DWORD LowPart, LONG  HighPart, LONGLONG QuadPart
 	sectorOffset.QuadPart = startOffset;
+
 
 	unsigned long currentPosition = SetFilePointer
 	(
@@ -81,77 +84,81 @@ bool NTFS_FS::ReadBootBlock()
 		return false;
 	}
 
-	infoNTFS = (BOOT_BLOCK*)bootSector;
+	infoexFAT = (BOOT_BLOCK_exFAT*)bootSector;
 
-	BytesPerSector = infoNTFS->BytesPerSector;
-	SectorPerCluster = infoNTFS->SectorsPerCluster;
+	SectorOfBitmap = infoexFAT->sectorOfBitmap;
+	TotalClusters = infoexFAT->countOfCluster;
+	BytesPerSector =  1 << pBootExFAT->sizeOfSector;
+	SectorPerCluster = 1 << pBootExFAT->clusterMlt ;
 	ClusterSize =  BytesPerSector*SectorPerCluster;
-	TotalSectors = infoNTFS->TotalSectors;
-	strcpy_s(OEMID, strlen(infoNTFS->OEMID )+1, infoNTFS->OEMID);
+	BeginCluster = 0
+
+	strcpy_s(OEMID, strlen(infoexFAT->OEMID )+1, infoexFAT->OEMID);
 
 	return true;
 }
 //---------------------------------------------------------------------------
 
-ULONGLONG NTFS_FS::GetTotalSectors()
+ULONGLONG exFAT_FS::GetTotalSectors()
 {
 	return TotalSectors;
 }
 
 //---------------------------------------------------------------------------
 
-BYTE NTFS_FS::GetSectorPerCluster()
+BYTE exFAT_FS::GetSectorPerCluster()
 {
 	return SectorPerCluster;
 }
 
 //---------------------------------------------------------------------------
 
-BYTE* NTFS_FS::GetOEMName()
+BYTE* exFAT_FS::GetOEMName()
 {
 	return OEMID;
 }
 
 //---------------------------------------------------------------------------
 
-UINT16 NTFS_FS::GetBytesPerSector()
+UINT16 exFAT_FS::GetBytesPerSector()
 {
 	return BytesPerSector;
 }
 
 //---------------------------------------------------------------------------
 
-HANDLE NTFS_FS::GetFileHandle()
+HANDLE exFAT_FS::GetFileHandle()
 {
 	return fileHandle;
 }
 
 //---------------------------------------------------------------------------
 
-void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
+void exFAT_FS::SetFileHandle(HANDLE FileSystemHandle)
 {
 	fileHandle = FileSystemHandle;
 }
 
 //---------------------------------------------------------------------------
 
- void NTFS_FS::Destroy(HANDLE FileSystemHandle)
+ void exFAT_FS::Destroy(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
 
 //---------------------------------------------------------------------------
 
-DriveIterator <ClusterDisk> NTFS_FS::GetClusterIterator()
+DriveIterator <ClusterDisk> * exFAT_FS::GetClusterIterator()
 {
-	return new NTFSIterator(this);
+	return new exFATIterator(this);
 }
 
 //---------------------------------------------------------------------------
 
-bool NTFS_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
+bool exFAT_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
 {
-	ULONGLONG StartOffset = StartCluster*ClusterSize;
+	ULONGLONG StartOffset = BytesPerReservedArea + BytesPerCopiesFAT + BytesPerRootDirectory
+	 + BytesPerCluster * ( StartCluster - BeginCluster );
 	DWORD BytesToRead = NumberOfClusters*ClusterSize;
 	DWORD BytesRead;
     LARGE_INTEGER SectorOffset;
@@ -179,7 +186,5 @@ bool NTFS_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *
 		}
 
 	return true;
-
 }
-
 

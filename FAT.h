@@ -1,10 +1,8 @@
 //---------------------------------------------------------------------------
 
-#ifndef NTFSH
-#define NTFSH
-
+#ifndef FATH
+#define FATH
 //---------------------------------------------------------------------------
-
 
 #include <windows.h>
 #include "Main.h"
@@ -22,34 +20,34 @@ typedef vector <BYTE> ClusterDisk;
 
 typedef struct
 {
-	BYTE Jump[3];
-	BYTE OEMID[8];
-	UINT16 BytesPerSector;
-	BYTE SectorsPerCluster;
-	BYTE padding1[2];
-	BYTE padding2[5];
-	BYTE typeStore;
-	BYTE padding3[2];
-	BYTE padding4[8];
-	BYTE padding5[4];
-	BYTE padding6[4];
-	ULONGLONG TotalSectors;
-	ULONGLONG MftStartLcn;
-	ULONGLONG Mft2StartLcn;
-	BYTE sizeMFT;
-	BYTE padding7[3];
-	BYTE sizeIndex;
-	BYTE padding8[3];
-	ULONGLONG VolumeSerialNumber;
-	BYTE padding9[ 4 ];
-	BYTE padding10[ 426 ];
-	BYTE Checksum[ 2 ];
+	BYTE machInstruction[ 3 ];
+	BYTE OEMID[ 8 ];
+	UINT16 bytesPerSector;
+	BYTE sectorPerClusterMlt;
+	UINT16 reservedArea;
+	BYTE countOfCopiesFAT;
+	UINT16 maxCountOfFiles;
+	UINT16 countOfSectors16;
+	BYTE typeOfStore;
+	UINT16 sizeOfCopiesFAT16;
+	UINT16 sectorPerTrack;
+	UINT16 countOfHeads;
+	UINT32 sectorsBeforePartition;
+	UINT32 countOfSectors32;
+	BYTE numberDiskBIOS;
+	BYTE padding;
+	BYTE extSignature;
+	UINT32 numberOfVolume;
+	BYTE markOfVolume[ 11 ];
+	BYTE markOfTypeFS[ 8 ];
+	BYTE padding2[ 448 ];
+	BYTE siganture[ 2 ];
 
-}BOOT_BLOCK_NTFS;
+}BOOT_BLOCK_FAT;
 
 #pragma pack(pop)
 
- class NTFS_FS : public FileSystemClass
+ class FAT_FS : public FileSystemClass
 {
 
 protected:
@@ -57,22 +55,29 @@ protected:
 	UINT16 BytesPerSector;
 	BYTE SectorPerCluster;
 	ULONGLONG TotalSectors;
+	UINT16 ClusterSize;
+	ULONGLONG TotalClusters;
+
 	BYTE OEMID[9];
 	WCHAR* path;
 
+    UINT32 BytesPerReservedArea;
+	UINT32 BytesPerCopiesFAT;
+	UINT32 BytesPerRootDirectory;
+
 private:
 
-	BOOT_BLOCK_NTFS* infoNTFS;
-	int ClusterSize;
+	BOOT_BLOCK_FAT* infoFAT;
+   //	int ClusterSize;
 	__int64 Size;
 
 public:
-	NTFS_FS(/*WCHAR *filePath*/);
+	FAT_FS(/*WCHAR *filePath*/);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
 	ClusterDisk *GetClusterIterator();
 
-	int GetFirstCluster() {return 0;};
+	int GetFirstCluster() {return 2;};
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
 	HANDLE GetFileHandle();
@@ -83,14 +88,7 @@ public:
 	void SetFileHandle(HANDLE FileSystemHandle);
 
 };
+
 #endif
-
-
-
-
-
-
-
-
 
 
