@@ -16,11 +16,9 @@ FileSystemClass *FileSystemClass::CreateFileSystem(UnicodeString diskPath,FSType
 			break;
             case FAT: FS = new FAT_FS(/*diskPath*/);
 			break;
-
-
-
+			case exFAT: FS = new exFAT_FS(/*diskPath*/);
+			break;
 			return FS;
-
 	}
 }
 

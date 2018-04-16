@@ -28,6 +28,8 @@ UnicodeString startCluster, UnicodeString endCluster, bool CreateSuspended)
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
+      FSType StructTypeFs;
+
 	  map <UnicodeString, FSType> mapper;
 
 	  if (mapper.count(StringTypeFs))

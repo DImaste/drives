@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------
 #include "SearchThread.h"
 #include "string"
-#include "FileSystemClass.h"
+//#include "FileSystemClass.h"
 
 
 //---------------------------------------------------------------------------
@@ -24,7 +24,6 @@ protected:
 	void __fastcall Execute();
 	UnicodeString Path;
 	UnicodeString StringTypeFs;
-	FSType StructTypeFs;
 	UnicodeString StartCluster;
 	UnicodeString EndCluster;
 

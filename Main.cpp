@@ -5,7 +5,6 @@
 #include <memory>
 #include "Main.h"
 #include "IteratorThread.h"
-#include "NTFS.h"
 #include "SearchThread.h"
 #include <string>
 #include <vector>

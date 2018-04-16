@@ -9,7 +9,6 @@
 #include <vector>
 #include <list>
 #include "Patterns.h"
-#include "NTFS.h"
 
 
 //---------------------------------------------------------------------------
@@ -17,13 +16,13 @@
 //typedef vector <BYTE> ClusterDisk;
 
 
-typedef enum FSType
+enum FSType
 {
 	NTFS,
 	FAT,
 	exFAT
 
-} FSTypes;
+};
 
 
 

@@ -50,11 +50,6 @@ template <class Type>
   class DriveIterator : public Iterator <Type>
 {
 private:
-	//FileSystemClass *FileSystem;
-   //	ClusterDisk Cluster;
-   //	int CurrentCluster;
-   //	int BytesPerCluster;
-   //	BYTE * DataBuffer;
 
 public:
 	DriveIterator() {};
