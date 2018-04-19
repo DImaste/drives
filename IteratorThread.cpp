@@ -12,7 +12,6 @@
 using namespace std;
 #pragma package(smart_init)
 
-// ERROR can't find a match?
 __fastcall IteratorThread::IteratorThread(UnicodeString filePath, UnicodeString fsType,
 UnicodeString startCluster, UnicodeString endCluster, bool CreateSuspended)
 	: TThread(CreateSuspended)
@@ -26,7 +25,7 @@ UnicodeString startCluster, UnicodeString endCluster, bool CreateSuspended)
 //---------------------------------------------------------------------------
 void __fastcall IteratorThread::Execute()
 {
-      FSType StructTypeFs;
+	  FSType StructTypeFs;
 
 	  map <UnicodeString, FSType> mapper;
 
@@ -101,9 +100,9 @@ void __fastcall IteratorThread::Execute()
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
-	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
+	DriveIterator <ClusterDisk> *Dec = mydisk->GetClusterIterator();
 
-	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
+	//DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
 
 	MySearchThread = new SearchThread(dataBuffer,clusterSize, false, TotalClusters);  //new thread
 
@@ -136,7 +135,7 @@ void __fastcall IteratorThread::Execute()
 	delete[] dataBuffer;
 	delete mydisk;
 	delete[] Dec; //decorator
-	delete[] It;  //iterator
+   //	delete[] It;  //iterator
 
 }
 //---------------------------------------------------------------------------

@@ -29,7 +29,6 @@ public:
 	virtual void Next() = 0;
 	virtual bool IsDone() const = 0;
 	virtual Type GetCurrent() = 0;
-	//virtual int GetCurrentIndex() const = 0;
 } ;
 
 //---------------------------------------------------------------------------
@@ -43,13 +42,12 @@ private:
 
 public:
 	DriveIterator() {};
-	~DriveIterator() {} ;
+	virtual ~DriveIterator() {} ;
 	virtual void First()=0;
 	virtual void Next()=0;
 	virtual bool IsDone() const =0 ;
 	virtual Type GetCurrent()=0;
 	virtual int GetCurrentIndex() const =0;
-
 } ;
 
 //---------------------------------------------------------------------------
