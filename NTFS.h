@@ -9,8 +9,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include <list>
-#include <stdio.h>
+
 #include "Patterns.h"
 #include "FileSystemClass.h"
 
@@ -59,6 +58,7 @@ protected:
 	BYTE OEMID[9];
 	WCHAR* path;
 
+
 private:
 
 	BOOT_BLOCK_NTFS* infoNTFS;
@@ -69,9 +69,10 @@ public:
 	NTFS_FS(/*WCHAR *filePath*/);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
-	ClusterDisk *GetClusterIterator();
+	DriveIterator <ClusterDisk> *GetClusterIterator();
 
 	int GetFirstCluster() {return 0;};
+	bool result;
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);
 	HANDLE GetFileHandle();

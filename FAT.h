@@ -7,8 +7,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include <list>
-#include <stdio.h>
+
 #include "Patterns.h"
 #include "FileSystemClass.h"
 
@@ -74,8 +73,10 @@ public:
 	FAT_FS(/*WCHAR *filePath*/);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
-	ClusterDisk *GetClusterIterator();
+	DriveIterator <ClusterDisk> *GetClusterIterator();
 
+	UINT32 BeginCluster;
+	bool result;
 	int GetFirstCluster() {return 2;};
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);

@@ -36,7 +36,6 @@ void __fastcall IteratorThread::Execute()
       }
 
 	  FileSystemClass *mydisk = FileSystemClass::CreateFileSystem(Path ,StructTypeFs);
-
 	  FileSystemHandle = mydisk->GetFileHandle();
 
 

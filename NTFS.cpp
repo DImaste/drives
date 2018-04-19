@@ -5,12 +5,11 @@
 #include "NTFS.h"
 #include "Main.h"
 #include <windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
+
 #include "Patterns.h"
+#include "FSIterators.h"
 #include "FileSystemClass.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
@@ -81,7 +80,7 @@ bool NTFS_FS::ReadBootBlock()
 		return false;
 	}
 
-	infoNTFS = (BOOT_BLOCK*)bootSector;
+	infoNTFS = (BOOT_BLOCK_NTFS*)bootSector;
 
 	BytesPerSector = infoNTFS->BytesPerSector;
 	SectorPerCluster = infoNTFS->SectorsPerCluster;
@@ -135,14 +134,14 @@ void NTFS_FS::SetFileHandle(HANDLE FileSystemHandle)
 
 //---------------------------------------------------------------------------
 
- void NTFS_FS::Destroy(HANDLE FileSystemHandle)
+ void NTFS_FS::DestroyFileSystem(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
 
 //---------------------------------------------------------------------------
 
-DriveIterator <ClusterDisk> NTFS_FS::GetClusterIterator()
+DriveIterator <ClusterDisk> * NTFS_FS::GetClusterIterator()
 {
 	return new NTFSIterator(this);
 }

@@ -119,6 +119,10 @@
             <DependentOn>FileSystemClass.h</DependentOn>
             <BuildOrder>7</BuildOrder>
         </CppCompile>
+        <CppCompile Include="FSIterators.cpp">
+            <DependentOn>FSIterators.h</DependentOn>
+            <BuildOrder>10</BuildOrder>
+        </CppCompile>
         <CppCompile Include="IteratorThread.cpp">
             <DependentOn>IteratorThread.h</DependentOn>
             <BuildOrder>3</BuildOrder>

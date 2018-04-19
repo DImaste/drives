@@ -4,16 +4,16 @@
 
 #include "FAT.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
+
 
 #include "Main.h"
 #include <windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
+
 #include "Patterns.h"
+#include "FSIterators.h"
 #include "FileSystemClass.h"
+
+#pragma package(smart_init)
 //---------------------------------------------------------------------------
 
 using namespace std;
@@ -118,21 +118,21 @@ ULONGLONG FAT_FS::GetTotalSectors()
 
 //---------------------------------------------------------------------------
 
-BYTE NTFS_FS::GetSectorPerCluster()
+BYTE FAT_FS::GetSectorPerCluster()
 {
 	return SectorPerCluster;
 }
 
 //---------------------------------------------------------------------------
 
-BYTE* NTFS_FS::GetOEMName()
+BYTE* FAT_FS::GetOEMName()
 {
 	return OEMID;
 }
 
 //---------------------------------------------------------------------------
 
-UINT16 NTFS_FS::GetBytesPerSector()
+UINT16 FAT_FS::GetBytesPerSector()
 {
 	return BytesPerSector;
 }
@@ -153,7 +153,7 @@ void FAT_FS::SetFileHandle(HANDLE FileSystemHandle)
 
 //---------------------------------------------------------------------------
 
- void FAT_FS::Destroy(HANDLE FileSystemHandle)
+ void FAT_FS::DestroyFileSystem(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
@@ -170,10 +170,10 @@ DriveIterator <ClusterDisk> * FAT_FS::GetClusterIterator()
 bool FAT_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
 {
 	ULONGLONG StartOffset = BytesPerReservedArea + BytesPerCopiesFAT + BytesPerRootDirectory
-	 + BytesPerCluster * ( StartCluster - BeginCluster );
+	 + ClusterSize * ( StartCluster - BeginCluster );
 	DWORD BytesToRead = NumberOfClusters*ClusterSize;
 	DWORD BytesRead;
-    LARGE_INTEGER SectorOffset;
+	LARGE_INTEGER SectorOffset;
 	SectorOffset.QuadPart = StartOffset;
 
 	unsigned long currentPosition = SetFilePointer

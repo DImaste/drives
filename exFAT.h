@@ -8,8 +8,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include <list>
-#include <stdio.h>
+
 #include "Patterns.h"
 #include "FileSystemClass.h"
 
@@ -63,10 +62,13 @@ private:
 
 public:
 	exFAT_FS(/*WCHAR *filePath*/);
+
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
-	ClusterDisk *GetClusterIterator();
+	DriveIterator <ClusterDisk> *GetClusterIterator();
 
+	UINT32 BeginCluster;
+	bool result;
 	int GetFirstCluster() {return 0;};
 	bool ReadBootBlock();
 	bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer);

@@ -4,16 +4,16 @@
 
 #include "exFAT.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
+
 
 #include "Main.h"
 #include <windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
+
 #include "Patterns.h"
+#include "FSIterators.h"
 #include "FileSystemClass.h"
+
+#pragma package(smart_init)
 //---------------------------------------------------------------------------
 
 using namespace std;
@@ -88,10 +88,10 @@ bool exFAT_FS::ReadBootBlock()
 
 	SectorOfBitmap = infoexFAT->sectorOfBitmap;
 	TotalClusters = infoexFAT->countOfCluster;
-	BytesPerSector =  1 << pBootExFAT->sizeOfSector;
-	SectorPerCluster = 1 << pBootExFAT->clusterMlt ;
+	BytesPerSector =  (1 << infoexFAT->sizeOfSector);
+	SectorPerCluster = (1 << infoexFAT->clusterMlt) ;
 	ClusterSize =  BytesPerSector*SectorPerCluster;
-	BeginCluster = 0
+	BeginCluster = 0 ;
 
 	strcpy_s(OEMID, strlen(infoexFAT->OEMID )+1, infoexFAT->OEMID);
 
@@ -141,7 +141,7 @@ void exFAT_FS::SetFileHandle(HANDLE FileSystemHandle)
 
 //---------------------------------------------------------------------------
 
- void exFAT_FS::Destroy(HANDLE FileSystemHandle)
+void exFAT_FS::DestroyFileSystem(HANDLE FileSystemHandle)
 {
 	CloseHandle(FileSystemHandle);
 }
@@ -157,11 +157,11 @@ DriveIterator <ClusterDisk> * exFAT_FS::GetClusterIterator()
 
 bool exFAT_FS::ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer)
 {
-	ULONGLONG StartOffset = BytesPerReservedArea + BytesPerCopiesFAT + BytesPerRootDirectory
-	 + BytesPerCluster * ( StartCluster - BeginCluster );
+	ULONGLONG StartOffset = 512 * SectorOfBitmap -
+	2 * ClusterSize + ClusterSize * StartCluster;
 	DWORD BytesToRead = NumberOfClusters*ClusterSize;
 	DWORD BytesRead;
-    LARGE_INTEGER SectorOffset;
+	LARGE_INTEGER SectorOffset;
 	SectorOffset.QuadPart = StartOffset;
 
 	unsigned long currentPosition = SetFilePointer

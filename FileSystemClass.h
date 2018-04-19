@@ -7,21 +7,16 @@
 #include "Main.h"
 #include <string>
 #include <vector>
-#include <list>
+
 #include "Patterns.h"
 
-
 //---------------------------------------------------------------------------
-
-//typedef vector <BYTE> ClusterDisk;
-
 
 enum FSType
 {
 	NTFS,
 	FAT,
 	exFAT
-
 };
 
 
@@ -36,9 +31,9 @@ class FileSystemClass
 		static FileSystemClass *CreateFileSystem(UnicodeString diskPath,FSType fsType);
 
 		virtual DriveIterator <ClusterDisk> * GetClusterIterator()=0;
-		virtual bool ReadBootBlock() const=0;
-		virtual bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer) const=0;
-		virtual void DestroyFileSystem(HANDLE FileSystemHandle);
+		virtual bool ReadBootBlock() =0;
+		virtual bool ReadCluster(ULONGLONG StartCluster, DWORD NumberOfClusters, BYTE *dataBuffer) =0;
+		virtual void DestroyFileSystem(HANDLE FileSystemHandle)=0;
 		virtual int GetFirstCluster() = 0;
 		virtual HANDLE GetFileHandle()=0;
 		virtual UINT16 GetBytesPerSector()=0;

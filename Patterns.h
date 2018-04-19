@@ -5,19 +5,9 @@
 //---------------------------------------------------------------------------
 #include <windows.h>
 
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
-#include <string>
 #include <vector>
-#include <list>
-#include <stdio.h>
 #include <iostream>
 
-#include "NTFS.h"
-#include "FAT.h"
-#include "exFAT.h"
 
 using namespace std;
 
@@ -61,71 +51,6 @@ public:
 	virtual int GetCurrentIndex() const =0;
 
 } ;
-
-//---------------------------------------------------------------------------
-
-
-class NTFSIterator : public DriveIterator <ClusterDisk>
-{
-private:
-	NTFS_FS * FileSystem;
-	ClusterDisk Cluster;
-	int CurrentCluster;
-	int BytesPerCluster;
-	BYTE * DataBuffer;
-
-public:
-	NTFSIterator(NTFS_FS *fs);
-	~NTFSIterator();
-	void First();
-	void Next();
-	bool IsDone() const ;
-	ClusterDisk GetCurrent();
-	int GetCurrentIndex() const ;
-} ;
-
-//---------------------------------------------------------------------------
-
-class FATIterator : public DriveIterator <ClusterDisk>
-{
-private:
-	FAT_FS * FileSystem;
-	ClusterDisk Cluster;
-	int CurrentCluster;
-	int BytesPerCluster;
-	BYTE * DataBuffer;
-
-public:
-	FATIterator(FAT_FS *fs);
-	~FATIterator();
-	void First();
-	void Next();
-	bool IsDone() const ;
-	ClusterDisk GetCurrent();
-	int GetCurrentIndex() const ;
-} ;
-
-//---------------------------------------------------------------------------
-
-class exFATIterator : public DriveIterator <ClusterDisk>
-{
-private:
-	exFAT_FS * FileSystem;
-	ClusterDisk Cluster;
-	int CurrentCluster;
-	int BytesPerCluster;
-	BYTE * DataBuffer;
-
-public:
-	exFATIterator(exFAT_FS *fs);
-	~exFATIterator();
-	void First();
-	void Next();
-	bool IsDone() const ;
-	ClusterDisk GetCurrent();
-	int GetCurrentIndex() const ;
-} ;
-
 
 //---------------------------------------------------------------------------
 //Decorator Class
