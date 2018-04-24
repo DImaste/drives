@@ -10,16 +10,13 @@
 #include <list>
 
 using namespace std;
-//---------------------------------------------------------------------------
-// Критическая секция добавления результатов поиска
-	//TCriticalSection *BufferAccessCS;
+
 //---------------------------------------------------------------------------
 const int WaitDelayMs = 2000;
 //---------------------------------------------------------------------------
 
 typedef struct
 {
-
 	__int64 currentCluster;
 	BYTE signature[4];
 	BYTE extensionFile[4];
@@ -30,7 +27,7 @@ class SearchThread : public TThread
 {
 private:
 	int ClusterSize;
-	BYTE *OutBufferPtr;
+	const vector < BYTE > *OutBufferPtr;
 	BYTE *DataBuffer;
 	int CurrentCluster;
 	BYTE signature[5];
@@ -60,7 +57,7 @@ protected:
 public:
    //	__fastcall SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount);
 	 void SetCurrentCluster(int Cluster);
-	__fastcall SearchThread(const vector <BYTE> *dataBufferPtr,int clusterSize,bool CreateSuspended );
+	__fastcall SearchThread(const vector <BYTE> *dataBufferPtr,int clusterSize,bool CreateSuspended, int clusterscount );
 
 	// События, используемые для синхронизации
 	TEvent *BufferReadyEvent;

@@ -105,14 +105,12 @@ void __fastcall IteratorThread::Execute()
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
-	DriveIterator <ClusterDisk> *Dec = mydisk->GetClusterIterator();
+	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
 
-	//DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
-
-   //	MySearchThread = new SearchThread(dataBuffer, clusterSize, false, TotalClusters);  //new thread
+	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
 
 	ClusterDisk CurrentCluster;
-	MySearchThread1 = new SearchThread( &CurrentCluster, clusterSize, false );
+	MySearchThread1 = new SearchThread( &CurrentCluster, clusterSize, false, LastClusterInt );
 
 
 		for (Dec->First(); !Dec->IsDone(); Dec->Next())
@@ -124,10 +122,7 @@ void __fastcall IteratorThread::Execute()
 				{
 				}
 
-			   //	MySearchThread->SetCurrentCluster(Dec->GetCurrentIndex());
-
 				MySearchThread1->SetCurrentCluster(Dec->GetCurrentIndex());
-
 
 				MySearchThread1->BufferCopiedEvent->ResetEvent();
 
@@ -146,7 +141,7 @@ void __fastcall IteratorThread::Execute()
 	delete[] dataBuffer;
 	delete mydisk;
 	delete[] Dec; //decorator
-   //	delete[] It;  //iterator
+	delete[] It;  //iterator
 
 }
 //---------------------------------------------------------------------------

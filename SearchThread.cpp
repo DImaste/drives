@@ -14,12 +14,7 @@ using namespace std;
 
 #pragma package(smart_init)
 
-//__fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount )
- //	: TThread(CreateSuspended)
-
-__fastcall SearchThread::SearchThread(const vector <BYTE> *dataBufferPtr,
-		int clusterSize,
-		bool CreateSuspended ) : TThread(CreateSuspended)
+__fastcall SearchThread::SearchThread(const vector <BYTE> *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount) : TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
 	MainForm->Progress->Max = clusterscount;
@@ -91,7 +86,7 @@ void SearchThread::SetCurrentCluster(int Cluster)
 //---------------------------------------------------------------------------
 void SearchThread::CopyData()
 {
-	memcpy(DataBuffer, OutBufferPtr, ClusterSize);
+	 copy(OutBufferPtr->begin(), OutBufferPtr->end(), DataBuffer);
 }
 
 //---------------------------------------------------------------------------
@@ -113,8 +108,8 @@ void __fastcall SearchThread::AddMatch()
 	PVirtualNode newNode = MainForm->ResultTree->AddChild(MainForm->ResultTree->RootNode);
 	FileTree* nodeData = (FileTree*)MainForm->ResultTree->GetNodeData(newNode);
 	nodeData-> currentCluster = CurrentCluster;
-	memcpy(nodeData->signature, signature, 4);
-	memcpy(nodeData->extensionFile, extensionFile, 4);
+	memcpy(nodeData->signature, signature, 3);
+	memcpy(nodeData->extensionFile, extensionFile, 3);
 }
 
 
