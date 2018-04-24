@@ -61,7 +61,7 @@ private:
 	__int64 Size;
 
 public:
-	exFAT_FS(/*WCHAR *filePath*/);
+	exFAT_FS(UnicodeString diskPath);
 
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 

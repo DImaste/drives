@@ -11,7 +11,7 @@
  NTFSIterator::NTFSIterator(NTFS_FS *fs)
 {
    FileSystem = fs;
-   CurrentCluster = 0;
+   CurrentCluster = FileSystem->GetFirstCluster();
    BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
    DataBuffer = new BYTE[ BytesPerCluster ];
 }
@@ -19,7 +19,7 @@
 // ------------------------------------------------------------------------------
 void NTFSIterator::First()
 {
-	CurrentCluster = 0;
+	CurrentCluster = FileSystem->GetFirstCluster();
 }
 
 // ------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ int NTFSIterator::GetCurrentIndex() const
  FATIterator::FATIterator(FAT_FS *fs)
 {
    FileSystem = fs;
-   CurrentCluster = 0;
+   CurrentCluster = FileSystem->GetFirstCluster();
    BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
    DataBuffer = new BYTE[ BytesPerCluster ];
 }
@@ -73,7 +73,7 @@ int NTFSIterator::GetCurrentIndex() const
 // ------------------------------------------------------------------------------
 void FATIterator::First()
 {
-	CurrentCluster = 0;
+	CurrentCluster = FileSystem->GetFirstCluster();
 }
 
 // ------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ int FATIterator::GetCurrentIndex() const
  exFATIterator::exFATIterator(exFAT_FS *fs)
 {
    FileSystem = fs;
-   CurrentCluster = 0;
+   CurrentCluster = FileSystem->GetFirstCluster();
    BytesPerCluster = FileSystem->GetBytesPerSector() * FileSystem->GetSectorPerCluster();
    DataBuffer = new BYTE[ BytesPerCluster ];
 }
@@ -127,7 +127,7 @@ int FATIterator::GetCurrentIndex() const
 // ------------------------------------------------------------------------------
 void exFATIterator::First()
 {
-	CurrentCluster = 0;
+	CurrentCluster = FileSystem->GetFirstCluster();
 }
 
 // ------------------------------------------------------------------------------

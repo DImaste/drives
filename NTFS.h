@@ -66,7 +66,7 @@ private:
 	__int64 Size;
 
 public:
-	NTFS_FS(/*WCHAR *filePath*/);
+	NTFS_FS(UnicodeString diskPath);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
 	DriveIterator <ClusterDisk> *GetClusterIterator();

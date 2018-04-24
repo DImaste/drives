@@ -70,7 +70,7 @@ private:
 	__int64 Size;
 
 public:
-	FAT_FS(/*WCHAR *filePath*/);
+	FAT_FS(UnicodeString diskPath);
 	void DestroyFileSystem(HANDLE FileSystemHandle);
 
 	DriveIterator <ClusterDisk> *GetClusterIterator();

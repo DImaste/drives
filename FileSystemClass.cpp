@@ -18,11 +18,11 @@ FileSystemClass *FileSystemClass::CreateFileSystem(UnicodeString diskPath,FSType
 
 	switch (fsType)
 	{
-			case NTFS: FS = new NTFS_FS(/*diskPath*/);
+			case NTFS: FS = new NTFS_FS(diskPath);
 				break;
-			case FAT: FS = new FAT_FS(/*diskPath*/);
+			case FAT: FS = new FAT_FS(diskPath);
 				break;
-			case exFAT: FS = new exFAT_FS(/*diskPath*/);
+			case exFAT: FS = new exFAT_FS(diskPath);
 				break;
 			default: FS = NULL;
 				break;

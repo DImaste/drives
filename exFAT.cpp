@@ -19,9 +19,9 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-exFAT_FS::exFAT_FS(/*WCHAR *filePath*/)
+exFAT_FS::exFAT_FS(UnicodeString diskPath)
 {
-	fileHandle = CreateFileW(MainForm->PathEdit->Text.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+	fileHandle = CreateFileW(diskPath.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
 								);
 
