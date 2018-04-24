@@ -34,7 +34,6 @@ __published:	// IDE-managed Components
 private:	// User declarations
 public:		// User declarations
 
-	//IteratorThread *myIteratorThread1;
 	__fastcall TMainForm(TComponent* Owner);
 
 	IteratorThread *myIteratorThread1;

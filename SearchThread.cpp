@@ -14,8 +14,12 @@ using namespace std;
 
 #pragma package(smart_init)
 
-__fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount )
-	: TThread(CreateSuspended)
+//__fastcall SearchThread::SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount )
+ //	: TThread(CreateSuspended)
+
+__fastcall SearchThread::SearchThread(const vector <BYTE> *dataBufferPtr,
+		int clusterSize,
+		bool CreateSuspended ) : TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
 	MainForm->Progress->Max = clusterscount;

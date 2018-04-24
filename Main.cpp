@@ -5,7 +5,6 @@
 #include <memory>
 #include "Main.h"
 #include "IteratorThread.h"
-#include "SearchThread.h"
 #include <string>
 #include <vector>
 
@@ -39,9 +38,6 @@ void __fastcall TMainForm::SearchButtonClick(TObject *Sender)
 	LogBox->Items->Add("------New Search------");
 	LogBox->Items->Add("   ");
 
-	//myIteratorThread = new IteratorThread(PathEdit->Text.c_str(), /*FsType->Text,*/ false);
-	//myIteratorThread = new IteratorThread(PathEdit->Text, FsType->Text, false);
-	//IteratorThread *myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
 	myIteratorThread1 =  new IteratorThread(PathEdit->Text, FsType->Text,Start->Text ,End->Text ,false);
 }
 

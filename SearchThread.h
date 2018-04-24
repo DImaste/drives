@@ -58,8 +58,9 @@ protected:
 
 
 public:
-	__fastcall SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount);
+   //	__fastcall SearchThread(BYTE *dataBufferPtr, int clusterSize, bool CreateSuspended, int clusterscount);
 	 void SetCurrentCluster(int Cluster);
+	__fastcall SearchThread(const vector <BYTE> *dataBufferPtr,int clusterSize,bool CreateSuspended );
 
 	// События, используемые для синхронизации
 	TEvent *BufferReadyEvent;

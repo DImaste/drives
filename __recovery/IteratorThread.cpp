@@ -98,21 +98,21 @@ void __fastcall IteratorThread::Execute()
 
 	if (BeginClusterInt > LastClusterInt)
 	{
-		MessageBoxW( NULL, L"Конечный кластер не может быть больше начального", L"Ошибка", MB_OK );
+		MessageBoxW( NULL, L"РљРѕРЅРµС‡РЅС‹Р№ РєР»Р°СЃС‚РµСЂ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ", L"РћС€РёР±РєР°", MB_OK );
 		return;
 	}
 
 	int clusterSize = BytesPerCluster;
 	BYTE *dataBuffer = new BYTE[clusterSize];
 
-	DriveIterator <ClusterDisk> *Dec = mydisk->GetClusterIterator();
+	DriveIterator <ClusterDisk> *It = mydisk->GetClusterIterator();
 
-	//DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
+	DriveIterator <ClusterDisk> *Dec = new DriveDecorator( It, BeginClusterInt, LastClusterInt );
 
    //	MySearchThread = new SearchThread(dataBuffer, clusterSize, false, TotalClusters);  //new thread
 
 	ClusterDisk CurrentCluster;
-	MySearchThread1 = new SearchThread( &CurrentCluster, clusterSize, false );
+	MySearchThread1 = new SearchThread( &CurrentCluster, clusterSize, false, TotalClusters );
 
 
 		for (Dec->First(); !Dec->IsDone(); Dec->Next())
@@ -146,7 +146,7 @@ void __fastcall IteratorThread::Execute()
 	delete[] dataBuffer;
 	delete mydisk;
 	delete[] Dec; //decorator
-   //	delete[] It;  //iterator
+	delete[] It;  //iterator
 
 }
 //---------------------------------------------------------------------------
